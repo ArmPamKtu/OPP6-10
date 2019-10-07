@@ -16,9 +16,9 @@ namespace Lab1_1.Streategy
             setAlgorithm(standart);
         }
 
-        public void move()
+        public void move(Player player, string command, int[][] map)
         {
-            _algorithm.Action();
+            _algorithm.Action(player, command, map);
         }
         public void setAlgorithm(Algorithm newAlgorithm)
         {

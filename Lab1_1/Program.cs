@@ -16,7 +16,7 @@ namespace Lab1_1
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            int turnLimit = 10;
+            int turnLimit = 4;
             int[][] map = new int[10][];
             for (int i = 0; i < 10; i++)
             {
@@ -51,26 +51,87 @@ namespace Lab1_1
             Algorithm teleport = algorithmFactory.GetDefault("Teleport");
 
 
-            while (!command.Equals("Stop"))
+
+            Console.WriteLine("choose your faction:");
+            Console.WriteLine("Wolfs - they get an extra action each turn");
+            Console.WriteLine("Hunter - they start with extra money");
+            Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
+
+            command = Console.ReadLine();
+
+            factory = new FactionFactory();
+            //  var ats = GetResponse(client);
+            player = factory.CreatePlayerWithFaction(command);
+            player.Creation();
+            player.setAlgorithm(hopper);
+
+            int n = 0;
+            map[player.currentY][player.currentX] = 1;
+
+            while (turnLimit > 0)
             {
-                Console.WriteLine("choose your faction:");
-                Console.WriteLine("Wolfs - they get an extra action each turn");
-                Console.WriteLine("Hunter - they start with extra money");
-                Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
 
+                while (n < 5)
+                {
+                    n++;
+              
+                    Console.WriteLine("Map looks like:");
+                    Console.WriteLine("___________");
+                    for (int i = 9; i >= 0; i--)
+                    {
+                        Console.Write("|");
+                        for (int j = 0; j < 10; j++)
+                        {
+                            Console.Write(map[i][j]);
+                        }
+                        Console.Write("|\n");
+                    }
+                    Console.WriteLine("___________");
+                    if (n != 5)
+                    {
+                        Console.WriteLine("Choose where to go next R,L,U,D?");
+                        command = Console.ReadLine();
+                        player.move(player, command, map);
+                    }
+
+                   
+                   /* switch (command)
+                    {
+                        case "U":
+                            player.currentY += player.Power;
+                            break;
+                        case "R":
+                            player.currentX += player.Power;
+                            break;
+                        case "D":
+                            player.currentY -= player.Power;
+                            break;
+                        case "L":
+                            player.currentX -= player.Power;
+                            break;
+                        default:
+                            player.currentX = 0;
+                            player.currentY = 0;
+                            break;
+                    }*/
+
+                }
+                Console.WriteLine("Do you want to move like:");
+                Console.WriteLine("Tower - go till the end of the line");
+                Console.WriteLine("Hopper - jump over a space");
+                Console.WriteLine("Teleport - write two digits and teleport on those coordinates");
+                Console.WriteLine("Standart - go one space in what direction you want");
                 command = Console.ReadLine();
-
-                factory = new FactionFactory();
-                //  var ats = GetResponse(client);
-                player = factory.CreatePlayerWithFaction(command);
-                player.Creation();
-                player.setAlgorithm(standart);
-                player.move();
-                player.setAlgorithm(teleport);
-                player.move();
-                // RunAsync().GetAwaiter().GetResult();
-
-
+                if (command.Equals("Tower"))
+                    player.setAlgorithm(tower);
+                else if(command.Equals("Hopper"))
+                    player.setAlgorithm(hopper);
+                else if (command.Equals("Teleport"))
+                    player.setAlgorithm(teleport);
+                else if (command.Equals("Standart"))
+                    player.setAlgorithm(standart);
+                turnLimit--;
+                n = 0;
             }
         }
      
