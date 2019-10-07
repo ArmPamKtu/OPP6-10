@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab1_1.Streategy;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -43,6 +44,12 @@ namespace Lab1_1
             client.BaseAddress = new Uri("https://localhost:44371/");
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+            AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+            Algorithm standart = algorithmFactory.GetDefault("Standart");
+            Algorithm hopper = algorithmFactory.GetDefault("Hopper");
+            Algorithm tower = algorithmFactory.GetDefault("Tower");
+            Algorithm teleport = algorithmFactory.GetDefault("Teleport");
+
 
             while (!command.Equals("Stop"))
             {
@@ -57,7 +64,10 @@ namespace Lab1_1
                 //  var ats = GetResponse(client);
                 player = factory.CreatePlayerWithFaction(command);
                 player.Creation();
-
+                player.setAlgorithm(standart);
+                player.move();
+                player.setAlgorithm(teleport);
+                player.move();
                 // RunAsync().GetAwaiter().GetResult();
 
 
