@@ -11,6 +11,8 @@ namespace Lab1_1
     {
         private static Factory factory;
         private static Player player;
+        private static ObstacleAbstractFactory shopFactory;
+        private static ObstacleAbstractFactory mapFactory;
 
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
@@ -57,6 +59,41 @@ namespace Lab1_1
                 //  var ats = GetResponse(client);
                 player = factory.CreatePlayerWithFaction(command);
                 player.Creation();
+
+                // RunAsync().GetAwaiter().GetResult();
+
+
+            }
+            shopFactory = new ShopFactory();
+            mapFactory = new MapFactory();
+            while (!command.Equals("Stop"))
+            {
+                Console.WriteLine("Create an obstacle:");
+                Console.WriteLine("Stone; Tree; GoldMine; ActionTower; Wonder");
+
+                command = Console.ReadLine();
+
+                switch (command)
+                {
+                    case "Stone":
+                        mapFactory.CreateObstacle(command);
+                        break;
+                    case "Tree":
+                        shopFactory.CreateObstacle(command);
+                        break;
+                    case "Gold Mine":
+                        mapFactory.CreateSuperObstacle(command);
+                        break;
+                    case "Action Tower":
+                        shopFactory.CreateSuperObstacle(command);
+                        break;
+                    case "Wonder":
+                        mapFactory.CreateSuperObstacle(command);
+                        break;
+                    default:
+                        break;
+                }
+                //  var ats = GetResponse(client);
 
                 // RunAsync().GetAwaiter().GetResult();
 
