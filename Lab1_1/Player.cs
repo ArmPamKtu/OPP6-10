@@ -1,4 +1,5 @@
 ﻿using Lab1_1.Streategy;
+using Lab1_1.Observer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Lab1_1
 
         public int currentX { get; set; }
         public int currentY { get; set; }
+
+        public List<AObserver> observers = new List<AObserver>();
 
         public Player(string faction, string type) :  base(type) 
         {
@@ -34,6 +37,24 @@ namespace Lab1_1
             Money = 0;
             NumberOfActions = 7;
             Faction = faction;
+        }
+
+        public void Attach(AObserver observer)
+        {
+            observers.Add(observer);
+        }
+
+        public void Detach(AObserver observer)
+        {
+            observers.Remove(observer);
+        }
+
+        public void Notify()
+        {
+            foreach (AObserver o in observers)
+            {
+                o.Update(this);
+            }
         }
 
         public void SetName(string name)

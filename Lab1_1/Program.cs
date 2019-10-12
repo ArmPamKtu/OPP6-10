@@ -62,6 +62,10 @@ namespace Lab1_1
             player.Creation();
             player.setAlgorithm(standart);
 
+            player.Attach(new Tree());
+            player.Attach(new Stone());
+            player.Attach(new Tree());
+
             int n = 0;
             map[player.currentY][player.currentX] = 1;
 
@@ -89,6 +93,7 @@ namespace Lab1_1
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
                         player.move(player, command, map);
+                        player.Notify();
                     }
 
                 }
