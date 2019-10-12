@@ -37,9 +37,6 @@ namespace Lab1_1
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
 
-
-
-
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             client.BaseAddress = new Uri("https://localhost:44371/");
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -60,10 +57,10 @@ namespace Lab1_1
             command = Console.ReadLine();
 
             factory = new FactionFactory();
-            //  var ats = GetResponse(client);
+           
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(hopper);
+            player.setAlgorithm(standart);
 
             int n = 0;
             map[player.currentY][player.currentX] = 1;
@@ -93,27 +90,6 @@ namespace Lab1_1
                         command = Console.ReadLine();
                         player.move(player, command, map);
                     }
-
-                   
-                   /* switch (command)
-                    {
-                        case "U":
-                            player.currentY += player.Power;
-                            break;
-                        case "R":
-                            player.currentX += player.Power;
-                            break;
-                        case "D":
-                            player.currentY -= player.Power;
-                            break;
-                        case "L":
-                            player.currentX -= player.Power;
-                            break;
-                        default:
-                            player.currentX = 0;
-                            player.currentY = 0;
-                            break;
-                    }*/
 
                 }
                 Console.WriteLine("Do you want to move like:");
