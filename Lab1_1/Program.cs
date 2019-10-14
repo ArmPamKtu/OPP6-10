@@ -97,6 +97,7 @@ namespace Lab1_1
                     }
 
                 }
+                Console.WriteLine("You have " + player.Money + " Money");
                 Console.WriteLine("Do you want to move like:");
                 Console.WriteLine("Tower - go till the end of the line");
                 Console.WriteLine("Hopper - jump over a space");
@@ -109,8 +110,14 @@ namespace Lab1_1
                     player.setAlgorithm(hopper);
                 else if (command.Equals("Teleport"))
                     player.setAlgorithm(teleport);
-                else if (command.Equals("Standart"))
+                else 
                     player.setAlgorithm(standart);
+                if (player is HardWorker && command.Equals("Work"))
+                {
+                    //HardWorker temp = (HardWorker)player;
+                    ((HardWorker)player).WorkHarder();
+                    
+                }
                 turnLimit--;
                 n = 0;
             }

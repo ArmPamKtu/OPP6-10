@@ -13,6 +13,7 @@ namespace Lab1_1.Streategy
                 case "U":
                     while (player.currentY < 10)
                     {
+                        player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
                         if (player.currentY <= 9)
                             player.currentY++;    
@@ -22,6 +23,7 @@ namespace Lab1_1.Streategy
                 case "R":
                     while (player.currentX < 10)
                     {
+                        player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
                         if(player.currentX <= 9)
                             player.currentX++;
@@ -31,6 +33,7 @@ namespace Lab1_1.Streategy
                 case "D":
                     while (player.currentY >= 0)
                     {
+                        player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
                         if (player.currentY >= 0)
                             player.currentY--;
@@ -41,6 +44,7 @@ namespace Lab1_1.Streategy
                 case "L":
                     while (player.currentX >= 0)
                     {
+                        player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
                         if (player.currentX >= 0)
                             player.currentX--;
