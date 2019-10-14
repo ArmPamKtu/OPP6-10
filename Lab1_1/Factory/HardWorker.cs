@@ -11,6 +11,11 @@ namespace Lab1_1
             Money = 10;
             NumberOfActions = 8;
         }
+
+        public void WorkHarder()
+        {
+            MoneyMultiplier = 2;
+        }
     }
     //gali tureti savo specialu ejima ar galia, kad unikalumas butu
 }

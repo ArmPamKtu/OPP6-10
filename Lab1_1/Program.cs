@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab1_1.Streategy;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -17,7 +18,7 @@ namespace Lab1_1
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            int turnLimit = 10;
+            int turnLimit = 4;
             int[][] map = new int[10][];
             for (int i = 0; i < 10; i++)
             {
@@ -38,31 +39,89 @@ namespace Lab1_1
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
 
-
-
-
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             client.BaseAddress = new Uri("https://localhost:44371/");
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+            AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+            Algorithm standart = algorithmFactory.GetDefault("Standart");
+            Algorithm hopper = algorithmFactory.GetDefault("Hopper");
+            Algorithm tower = algorithmFactory.GetDefault("Tower");
+            Algorithm teleport = algorithmFactory.GetDefault("Teleport");
 
-            while (!command.Equals("Stop"))
+
+
+            Console.WriteLine("choose your faction:");
+            Console.WriteLine("Wolfs - they get an extra action each turn");
+            Console.WriteLine("Hunter - they start with extra money");
+            Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
+
+            command = Console.ReadLine();
+
+            factory = new FactionFactory();
+           
+            player = factory.CreatePlayerWithFaction(command);
+            player.Creation();
+            player.setAlgorithm(standart);
+
+            player.Attach(new Tree());
+            player.Attach(new Stone());
+            player.Attach(new Tree());
+
+            int n = 0;
+            map[player.currentY][player.currentX] = 1;
+
+            while (turnLimit > 0)
             {
-                Console.WriteLine("choose your faction:");
-                Console.WriteLine("Wolfs - they get an extra action each turn");
-                Console.WriteLine("Hunter - they start with extra money");
-                Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
 
+                while (n < 5)
+                {
+                    n++;
+              
+                    Console.WriteLine("Map looks like:");
+                    Console.WriteLine("___________");
+                    for (int i = 9; i >= 0; i--)
+                    {
+                        Console.Write("|");
+                        for (int j = 0; j < 10; j++)
+                        {
+                            Console.Write(map[i][j]);
+                        }
+                        Console.Write("|\n");
+                    }
+                    Console.WriteLine("___________");
+                    if (n != 5)
+                    {
+                        Console.WriteLine("Choose where to go next R,L,U,D?");
+                        command = Console.ReadLine();
+                        player.move(player, command, map);
+                        player.Notify();
+                    }
+
+                }
+                Console.WriteLine("You have " + player.Money + " Money");
+                Console.WriteLine("Do you want to move like:");
+                Console.WriteLine("Tower - go till the end of the line");
+                Console.WriteLine("Hopper - jump over a space");
+                Console.WriteLine("Teleport - write two digits and teleport on those coordinates");
+                Console.WriteLine("Standart - go one space in what direction you want");
                 command = Console.ReadLine();
-
-                factory = new FactionFactory();
-                //  var ats = GetResponse(client);
-                player = factory.CreatePlayerWithFaction(command);
-                player.Creation();
-
-                // RunAsync().GetAwaiter().GetResult();
-
-
+                if (command.Equals("Tower"))
+                    player.setAlgorithm(tower);
+                else if(command.Equals("Hopper"))
+                    player.setAlgorithm(hopper);
+                else if (command.Equals("Teleport"))
+                    player.setAlgorithm(teleport);
+                else 
+                    player.setAlgorithm(standart);
+                if (player is HardWorker && command.Equals("Work"))
+                {
+                    //HardWorker temp = (HardWorker)player;
+                    ((HardWorker)player).WorkHarder();
+                    
+                }
+                turnLimit--;
+                n = 0;
             }
             shopFactory = new ShopFactory();
             mapFactory = new MapFactory();
