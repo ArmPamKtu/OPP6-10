@@ -14,5 +14,8 @@ namespace GameServer.Models
         }
 
         public DbSet<Player> Players { get; set; }
+        public DbSet<Temp> PlayersPOST_ID { get; set; }
+        public DbSet<Temp2> PlayersGET_ID { get; set; }
+        public DbSet<TempMap> Map { get; set; }
     }
 }

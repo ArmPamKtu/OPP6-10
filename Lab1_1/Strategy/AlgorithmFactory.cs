@@ -12,16 +12,12 @@ namespace Lab1_1.Streategy
             {
                 case "Hopper":
                     return new Hopper();
-                    break;
                 case "Tower":
                     return new Tower();
-                    break;
                 case "Teleport":
                     return new Teleport();
-                    break;
                 case "Standart":
                     return new Standart();
-                    break;
                 default:
                     return null;
 

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lab1_1.Observer
 {
-    public abstract class AObserver
+    public class GameState : Subject
     {
-        public abstract void Update();
     }
 }

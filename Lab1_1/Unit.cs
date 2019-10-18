@@ -11,7 +11,7 @@ namespace Lab1_1
         public int CoordinateX { get; set; }
         public int CoordinateY { get; set; }
 
-        public override void Update(Player p)
+        public override void Update()
         {
             Console.WriteLine("Unit");
         }

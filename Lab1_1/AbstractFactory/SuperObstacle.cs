@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    class SuperObstacle: Unit
+    public class SuperObstacle: Unit
     {
     }
 }

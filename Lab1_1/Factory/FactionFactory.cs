@@ -13,13 +13,10 @@ namespace Lab1_1
             {
                 case "H":
                     return new Hunter("Hunter");
-                    break;
                 case "W":
                     return new Wolf("Wolf");
-                    break;
                 case "HW":
                     return new HardWorker("Hard Worker");
-                    break;
                 default:
                     return null;
 

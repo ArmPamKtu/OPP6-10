@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    class GoldMine: SuperObstacle
+    public class GoldMine: SuperObstacle
     {
+        public override void Update()
+        {
+            Console.WriteLine("Gold mine");
+        }
     }
 }

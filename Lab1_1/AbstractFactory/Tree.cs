@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    class Tree: Obstacle
+    public class Tree: Obstacle
     {
+        public override void Update()
+        {
+            Console.WriteLine("Tree");
+        }
     }
 }
