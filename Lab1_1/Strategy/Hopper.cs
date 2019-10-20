@@ -12,12 +12,12 @@ namespace Lab1_1.Streategy
             switch (command)
             {
                 case "U":
-                    if (player.currentY + player.Power < 10)
+                    if (player.currentY + player.Power < map.Length)
                         player.currentY += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "R":
-                    if (player.currentX + player.Power < 10)
+                    if (player.currentX + player.Power < map.Length)
                         player.currentX += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;

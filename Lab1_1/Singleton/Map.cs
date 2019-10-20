@@ -6,6 +6,7 @@ namespace Lab1_1
 {
     public class Map
     {
+        private static int[][] Grid { get; set; }
         private static int counter = 0;
         private static readonly object Instancelock = new object();
         private Map()
@@ -37,6 +38,7 @@ namespace Lab1_1
         {
             Console.WriteLine(message);
         }
+
 
     }
 }
