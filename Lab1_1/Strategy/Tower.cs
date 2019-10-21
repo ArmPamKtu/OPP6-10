@@ -11,21 +11,21 @@ namespace Lab1_1.Streategy
             switch (command)
             {
                 case "U":
-                    while (player.currentY < 10)
+                    while (player.currentY < map.Length)
                     {
                         player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
-                        if (player.currentY <= 9)
+                        if (player.currentY <= map.Length)
                             player.currentY++;    
                     }
                     player.currentY--;
                     break;
                 case "R":
-                    while (player.currentX < 10)
+                    while (player.currentX < map.Length)
                     {
                         player.Money = player.Money + player.MoneyMultiplier;
                         map[player.currentY][player.currentX] = 1;
-                        if(player.currentX <= 9)
+                        if(player.currentX <= map.Length)
                             player.currentX++;
                     }
                     player.currentX--;

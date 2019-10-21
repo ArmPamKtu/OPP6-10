@@ -1,4 +1,5 @@
-﻿using Lab1_1.Streategy;
+﻿using Lab1_1.AbstractFactory;
+using Lab1_1.Streategy;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -73,11 +74,11 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(standart);
+            player.setAlgorithm(tower);
 
-            player.Attach(new Tree());
+           /* player.Attach(new Tree());
             player.Attach(new Stone());
-            player.Attach(new Tree());
+            player.Attach(new Tree());*/
 
             int n = 0;
             map[player.currentY][player.currentX] = 1;
@@ -85,7 +86,7 @@ namespace Lab1_1
             while (turnLimit > 0)
             {
 
-                while (n < 5)
+                while (n < player.NumberOfActions)
                 {
                     n++;
               
@@ -101,12 +102,12 @@ namespace Lab1_1
                         Console.Write("|\n");
                     }
                     Console.WriteLine("___________");
-                    if (n != 5)
+                    if (n != player.NumberOfActions)
                     {
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
                         player.move(player, command, map);
-                        player.Notify();
+                       /* player.Notify();*/
                     }
 
                 }
@@ -125,17 +126,41 @@ namespace Lab1_1
                     player.setAlgorithm(teleport);
                 else 
                     player.setAlgorithm(standart);
-                if (player is HardWorker && command.Equals("Work"))
+
+                
+                if (player is HardWorker)
                 {
-                    //HardWorker temp = (HardWorker)player;
-                    ((HardWorker)player).WorkHarder();
-                    
+                    Console.WriteLine("As a Hard worker you can work harder and get more money per action, but have less actions per round");
+                    if(player.MoneyMultiplier == 1)
+                        Console.WriteLine("Type 'Work' to do it!");
+                    else
+                        Console.WriteLine("Type 'Stop' to go back to normal mode");
+                    command = Console.ReadLine();
+
+                    if(command.Equals("Work"))
+                        ((HardWorker)player).WorkHarder();
+                    else if(command.Equals("Stop"))
+                        ((HardWorker)player).GetBackToNormal();
                 }
+                else if(player is Wolf)
+                {
+                    if (((Wolf)player).GetAttackLimit() != 0)
+                    {
+                        Console.WriteLine("As a Wolf you can attack an area and capture it");
+                        Console.WriteLine("If you want to attack, type a direction: R,L,U,D");
+                        command = Console.ReadLine();
+                        ((Wolf)player).AttackASpecificArea(player, command, map);
+
+                    }
+                }
+
+
                 turnLimit--;
                 n = 0;
             }
-            shopFactory = new ShopFactory();
-            mapFactory = new MapFactory();
+           // shopFactory = new ShopFactory();
+           // mapFactory = new MapFactory();
+
             while (!command.Equals("Stop"))
             {
                 Console.WriteLine("Create an obstacle:");
