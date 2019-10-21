@@ -33,6 +33,10 @@ namespace Lab1_1
             }
 
 
+            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            client.BaseAddress = new Uri("https://localhost:44371/");
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
             Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
@@ -41,19 +45,14 @@ namespace Lab1_1
 
             CreatePlayerAsync(player).GetAwaiter().GetResult();
 
-            command = Console.ReadLine();
-            ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            ICollection<Player> playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
             while (playersInLobby.Count < maxLobbyPlayers)
             {
-                playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+                playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
             }
 
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
-
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44371/");
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
             AlgorithmFactory algorithmFactory = new AlgorithmFactory();
             Algorithm standart = algorithmFactory.GetDefault("Standart");
