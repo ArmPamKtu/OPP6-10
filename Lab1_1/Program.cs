@@ -119,7 +119,7 @@ namespace Lab1_1
                 
                 if (player is HardWorker)
                 {
-                    Console.WriteLine("As a Hard worker you can work harder and get more money per action, but have less actions per round");
+                    Console.WriteLine("As a Hard worker you can work harder and get more money per action( double), but have less actions per round( 6 actions)");
                     if(player.MoneyMultiplier == 1)
                         Console.WriteLine("Type 'Work' to do it!");
                     else
@@ -141,6 +141,10 @@ namespace Lab1_1
                         ((Wolf)player).AttackASpecificArea(player, command, map);
 
                     }
+                }
+                else
+                {
+
                 }
 
 
