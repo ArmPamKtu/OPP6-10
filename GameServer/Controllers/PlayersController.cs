@@ -80,22 +80,29 @@ namespace GameServer.Controllers
 
             return NoContent();
         }
-
-        // POST: api/Players
+        // POST api/player
         [HttpPost]
-        public async Task<IActionResult> PostPlayer([FromBody] Player player)
+        //public string Create(Player player)
+        public ActionResult<Player> Create([FromBody] Player player)
         {
-            if (!ModelState.IsValid)
+            if (!PlayerWithNameExists(player.Name))
             {
-                return BadRequest(ModelState);
+                _context.Players.Add(player);
+                _context.SaveChanges();
+
+                //return Ok(); //"created - ok"; 
+                return CreatedAtRoute("GetPlayer", new { id = player.Id }, player);
             }
-
-            _context.Players.Add(player);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPlayer", new { id = player.Id }, player);
+            else
+                return null;
         }
 
+        // GET api/player
+        [HttpGet]
+        public ActionResult<IEnumerable<Player>> GetAll()
+        {
+            return _context.Players.ToList();
+        }
         // DELETE: api/Players/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayer([FromRoute] long id)
@@ -120,6 +127,10 @@ namespace GameServer.Controllers
         private bool PlayerExists(long id)
         {
             return _context.Players.Any(e => e.Id == id);
+        }
+        private bool PlayerWithNameExists(string name)
+        {
+            return _context.Players.Any(e => e.Name == name);
         }
     }
 }

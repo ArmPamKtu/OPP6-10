@@ -16,6 +16,9 @@ namespace Lab1_1
         private static ObstacleAbstractFactory shopFactory;
         private static ObstacleAbstractFactory mapFactory;
 
+        private static string requestUri = "api/player/";
+        private static int maxLobbyPlayers = 4;
+
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
@@ -31,18 +34,26 @@ namespace Lab1_1
             }
 
 
-            string command = "";
-            Console.WriteLine("Welcome to splash Wars!");
-            Console.WriteLine("Press S to start looking for a loby( you will be added to a lobby automatically)");
-            command = Console.ReadLine();
-          
-
-            Map map1 = Map.GetInstance;
-            Map map2 = Map.GetInstance;
-
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             client.BaseAddress = new Uri("https://localhost:44371/");
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            string command = "";
+            Console.WriteLine("Welcome to splash Wars!");
+            Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
+            command = Console.ReadLine();
+            player.SetName(command);
+
+            CreatePlayerAsync(player).GetAwaiter().GetResult();
+
+            ICollection<Player> playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
+            while (playersInLobby.Count < maxLobbyPlayers)
+            {
+                playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
+            }
+
+            Map map1 = Map.GetInstance;
+            Map map2 = Map.GetInstance;
 
             AlgorithmFactory algorithmFactory = new AlgorithmFactory();
             Algorithm standart = algorithmFactory.GetDefault("Standart");
@@ -188,7 +199,11 @@ namespace Lab1_1
 
             }
         }
-     
+        static void ShowPlayer(Player player)
+        {
+            Console.WriteLine("Player name: " + player.Name);
+        }
+
         static async Task RunAsync()
         {
             // Update port # in the following line.
@@ -199,16 +214,38 @@ namespace Lab1_1
 
             try
             {
-               /* // Create a new product
-                Product product = new Product
+                string command = "";
+                Console.WriteLine("1.1)\tCreate the player");
+                command = Console.ReadLine();
+                //        Player player = new Player
+                //        {
+                //            Name = "Studentas-" + playersList.Count.ToString(),
+                //        };
+                ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+                while (playersInLobby.Count < maxLobbyPlayers)
                 {
-                    Name = "Gizmo",
-                    Price = 100,
-                    Category = "Widgets"
-                };
-                
-                var url =  CreateProductAsync(product);
-                Console.WriteLine($"Created at {url}");*/
+                    playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+                }
+
+                /* // Create a new product
+                 Product product = new Product
+                 {
+                     Name = "Gizmo",
+                     Price = 100,
+                     Category = "Widgets"
+                 };
+
+
+                 var url =  CreateProductAsync(product);
+                 Console.WriteLine($"Created at {url}");*/
+
+                // Create a new player
+                Console.WriteLine("1.1)\tCreate the player");
+        //        Player player = new Player
+        //        {
+        //            Name = "Studentas-" + playersList.Count.ToString(),
+        //        };
+
 
                 // Get the product
                 var ats = await GetProductAsync("api/values");
@@ -234,6 +271,32 @@ namespace Lab1_1
             }
 
             Console.ReadLine();
+        }
+        static async Task<Uri> CreatePlayerAsync(Player player)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                requestUri, player);
+            response.EnsureSuccessStatusCode();
+
+            // Deserialize the updated product from the response body.
+            Player player2 = await response.Content.ReadAsAsync<Player>();
+            if (player2 != null)
+            {
+                ShowPlayer(player2);
+            }
+
+            // return URI of the created resource.
+            return response.Headers.Location;
+        }
+        static async Task<ICollection<Player>> GetAllPlayersAsync(string path)
+        {
+            ICollection<Player> players = null;
+            HttpResponseMessage response = await client.GetAsync(path + "api/player");
+            if (response.IsSuccessStatusCode)
+            {
+                players = await response.Content.ReadAsAsync<ICollection<Player>>();
+            }
+            return players;
         }
         static async Task<List<string>> GetProductAsync(string path)
         {
