@@ -16,7 +16,8 @@ namespace Lab1_1
         private static ObstacleAbstractFactory shopFactory;
         private static ObstacleAbstractFactory mapFactory;
 
-        private static string requestUri = "api/player/";
+        private static string requestUri = "/api/players/";
+        static string mediaType = "application/json";
         private static int maxLobbyPlayers = 4;
 
         static HttpClient client = new HttpClient();
@@ -33,15 +34,22 @@ namespace Lab1_1
                 }
             }
 
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44371/");
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            client = new HttpClient(clientHandler);
+
+            client.BaseAddress = new Uri("https://localhost:44372/"); //api /player/");
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue(mediaType));
 
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
             Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
             command = Console.ReadLine();
+            Player player = new Player();
             player.SetName(command);
 
             CreatePlayerAsync(player).GetAwaiter().GetResult();
@@ -207,7 +215,7 @@ namespace Lab1_1
         static async Task RunAsync()
         {
             // Update port # in the following line.
-            client.BaseAddress = new Uri("https://localhost:44371/");
+            client.BaseAddress = new Uri("https://localhost:50140/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
@@ -291,7 +299,7 @@ namespace Lab1_1
         static async Task<ICollection<Player>> GetAllPlayersAsync(string path)
         {
             ICollection<Player> players = null;
-            HttpResponseMessage response = await client.GetAsync(path + "api/player");
+            HttpResponseMessage response = await client.GetAsync(path + "api/players");
             if (response.IsSuccessStatusCode)
             {
                 players = await response.Content.ReadAsAsync<ICollection<Player>>();

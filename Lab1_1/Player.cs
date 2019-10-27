@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lab1_1
 {
-    public abstract class Player : MovementStrategy
+    public class Player : MovementStrategy
     {
         public int Money { get; set; }
         public int MoneyMultiplier { get; set; }
@@ -29,6 +29,9 @@ namespace Lab1_1
             NumberOfActions = 7;
             Faction = faction;
         }
+        public Player() : base("")
+        {
+        }
 
         public void SetName(string name)
         {
@@ -38,5 +41,9 @@ namespace Lab1_1
         {
             Console.WriteLine("You chose to be a " + Faction);
         }
+    }
+    public class gamePlayer : Player
+    {
+
     }
 }
