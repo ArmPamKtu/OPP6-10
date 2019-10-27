@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Lab1_1.AbstractFactory;
 
 namespace Lab1_1
 {
@@ -12,8 +13,8 @@ namespace Lab1_1
     {
         private static Factory factory;
         private static Player player;
-        private static ObstacleAbstractFactory shopFactory;
-        private static ObstacleAbstractFactory mapFactory;
+        private static ShopFactory shopFactory;
+        private static MapFactory mapFactory;
 
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
@@ -67,6 +68,38 @@ namespace Lab1_1
             player.Attach(new Tree());
             player.Attach(new Stone());
             player.Attach(new Tree());
+
+            shopFactory = new ShopFactory();
+            mapFactory = new MapFactory();
+            while (!command.Equals("Stop"))
+            {
+                Console.WriteLine("Create an obstacle:");
+                Console.WriteLine("Stone; Tree; Gold Mine; Action Tower; Wonder");
+                Console.WriteLine("Type \"Stop\" to stop");
+
+                command = Console.ReadLine();
+
+                switch (command)
+                {
+                    case "Stone":
+                        mapFactory.CreateObstacle(command);
+                        break;
+                    case "Tree":
+                        shopFactory.CreateObstacle(command);
+                        break;
+                    case "Gold Mine":
+                        mapFactory.CreateSuperObstacle(command);
+                        break;
+                    case "Action Tower":
+                        shopFactory.CreateSuperObstacle(command);
+                        break;
+                    case "Wonder":
+                        mapFactory.CreateSuperObstacle(command);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             int n = 0;
             map[player.currentY][player.currentX] = 1;
@@ -122,41 +155,6 @@ namespace Lab1_1
                 }
                 turnLimit--;
                 n = 0;
-            }
-            shopFactory = new ShopFactory();
-            mapFactory = new MapFactory();
-            while (!command.Equals("Stop"))
-            {
-                Console.WriteLine("Create an obstacle:");
-                Console.WriteLine("Stone; Tree; GoldMine; ActionTower; Wonder");
-
-                command = Console.ReadLine();
-
-                switch (command)
-                {
-                    case "Stone":
-                        mapFactory.CreateObstacle(command);
-                        break;
-                    case "Tree":
-                        shopFactory.CreateObstacle(command);
-                        break;
-                    case "Gold Mine":
-                        mapFactory.CreateSuperObstacle(command);
-                        break;
-                    case "Action Tower":
-                        shopFactory.CreateSuperObstacle(command);
-                        break;
-                    case "Wonder":
-                        mapFactory.CreateSuperObstacle(command);
-                        break;
-                    default:
-                        break;
-                }
-                //  var ats = GetResponse(client);
-
-                // RunAsync().GetAwaiter().GetResult();
-
-
             }
         }
      

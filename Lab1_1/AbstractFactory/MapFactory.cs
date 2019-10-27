@@ -22,6 +22,7 @@ namespace Lab1_1.AbstractFactory
                 default:
                     break;
             }
+            return null;
         }
     }
 }
