@@ -68,19 +68,43 @@ namespace Lab1_1
             return Grid;
         }
 
-        public int GetXSize()
+        public List<Unit> ConvertArrayToList()
+        {
+            List<Unit> unitList = new List<Unit>();
+            for (int y = 0; y < GetYSize(); y++)
+            {
+                for (int x = 0; x < GetXSize(); x++)
+                {
+                    unitList.Add(GetUnit(x, y));
+                }
+            }
+            return unitList;
+        }
+
+        public void ConvertListToArray(List<Unit> unitList)
+        {
+            for (int y = 0; y < GetYSize(); y++)
+            {
+                for (int x = 0; x < GetXSize(); x++)
+                {
+                    Grid[y][x] = unitList[y * GetXSize() + x];
+                }
+            }
+        }
+
+        public int GetYSize()
         {
             return Grid.Length;
         }
 
-        public int GetYSize()
+        public int GetXSize()
         {
             return Grid[0].Length;
         }
 
         public Unit GetUnit(int x, int y)
         {
-            return Grid[x][y];
+            return Grid[y][x];
         }
     }
 }

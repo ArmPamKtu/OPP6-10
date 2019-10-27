@@ -56,7 +56,27 @@ namespace Lab1_1
                 }
                 Console.WriteLine();
             }
+            Console.ResetColor();
 
+            //Test conversion from array to list and vice versa
+            //------
+            Map.GetInstance.ConvertListToArray(Map.GetInstance.ConvertArrayToList());
+            Console.WriteLine();
+            Console.WriteLine("Test conversion from array to list and vice versa");
+            Console.WriteLine("------------------");
+
+            for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+            {
+                for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                {
+                    Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Map.GetInstance.GetUnit(x, y).GetColor());
+                    Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
+                }
+                Console.WriteLine();
+            }
+            Console.ResetColor();
+            Console.WriteLine("------------------");
+            //------
 
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
