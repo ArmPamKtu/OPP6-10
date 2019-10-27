@@ -13,6 +13,7 @@ namespace Lab1_1
     {
         private static Factory factory;
         private static Player player;
+        private static Map map;
         private static ObstacleAbstractFactory shopFactory;
         private static ObstacleAbstractFactory mapFactory;
 
@@ -23,7 +24,7 @@ namespace Lab1_1
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            int turnLimit = 4;
+            /*/int turnLimit = 4;
             int[][] map = new int[10][];
             for (int i = 0; i < 10; i++)
             {
@@ -32,7 +33,7 @@ namespace Lab1_1
                 {
                     map[i][j] = 0;
                 }
-            }
+            }*/
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -44,6 +45,25 @@ namespace Lab1_1
 
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue(mediaType));
+
+            Console.WriteLine("Welcome to splash Wars!");
+            Console.WriteLine("Enter map's size on X axis");
+            int xSize = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter map's size on Y axis");
+            int ySize = int.Parse(Console.ReadLine());
+            Map.GetInstance.GenerateGrid(xSize, ySize);
+
+
+            for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+            {
+                for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                {
+                    Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Map.GetInstance.GetUnit(x, y).GetColor());
+                    Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
+                }
+                Console.WriteLine();
+            }
+
 
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
@@ -89,6 +109,7 @@ namespace Lab1_1
             player.Attach(new Tree());*/
 
             int n = 0;
+            /*
             map[player.currentY][player.currentX] = 1;
 
             while (turnLimit > 0)
@@ -115,7 +136,7 @@ namespace Lab1_1
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
                         player.move(player, command, map);
-                       /* player.Notify();*/
+                       //player.Notify();
                     }
 
                 }
@@ -169,7 +190,7 @@ namespace Lab1_1
 
                 turnLimit--;
                 n = 0;
-            }
+            }*/
            // shopFactory = new ShopFactory();
            // mapFactory = new MapFactory();
 
