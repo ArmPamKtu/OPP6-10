@@ -6,5 +6,15 @@ namespace Lab1_1.AbstractFactory
 {
     class Wonder: SuperObstacle
     {
+        public Wonder(int x, int y):base(x, y)
+        {
+            symbol = 'W';
+        }
+
+        public override void Update()
+        {
+            //Player has to win
+            //GameController.EndGame(owner)
+        }
     }
 }

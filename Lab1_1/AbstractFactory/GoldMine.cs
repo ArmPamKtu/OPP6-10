@@ -6,9 +6,15 @@ namespace Lab1_1.AbstractFactory
 {
     public class GoldMine: SuperObstacle
     {
+        public GoldMine(int x, int y) : base(x, y)
+        {
+            symbol = 'G';
+        }
+
         public override void Update()
         {
-            Console.WriteLine("Gold mine");
+            //Player has to get more gold
+            //owner.MoneyMultiplier *= 2;
         }
     }
 }
