@@ -15,6 +15,12 @@ namespace Lab1_1
         public void WorkHarder()
         {
             MoneyMultiplier = 2;
+            NumberOfActions = 6;
+        }
+        public void GetBackToNormal()
+        {
+            MoneyMultiplier = 1;
+            NumberOfActions = 8;
         }
     }
     //gali tureti savo specialu ejima ar galia, kad unikalumas butu

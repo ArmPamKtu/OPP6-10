@@ -8,8 +8,12 @@ namespace Lab1_1
     {
         public Hunter(string faction) : base(faction)
         {
-            Money = 10;
+            Money = 40;
         }
-        //gali tureti savo specialu ejima ar galia, kad unikalumas butu
+        
+        public void Shoot(Player player, string command, int[][] map)
+        {
+
+        }
     }
 }

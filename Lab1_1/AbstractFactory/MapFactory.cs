@@ -20,7 +20,7 @@ namespace Lab1_1.AbstractFactory
                 case "Gold Mine":
                     return new GoldMine();
                 default:
-                    break;
+                    return null;
             }
             return null;
         }
