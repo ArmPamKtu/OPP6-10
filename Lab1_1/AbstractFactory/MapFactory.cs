@@ -6,19 +6,19 @@ namespace Lab1_1.AbstractFactory
 {
     class MapFactory
     {
-        public Unit CreateObstacle(string input)
+        public Unit CreateObstacle(string input, int x, int y)
         {
-            return new Stone();
+            return new Stone(x, y);
         }
 
-        public Unit CreateSuperObstacle(string input)
+        public Unit CreateSuperObstacle(string input, int x, int y)
         {
             switch (input)
             {
                 case "Wonder":
-                    return new Wonder();
+                    return new Wonder(x, y);
                 case "Gold Mine":
-                    return new GoldMine();
+                    return new GoldMine(x, y);
                 default:
                     return null;
             }
