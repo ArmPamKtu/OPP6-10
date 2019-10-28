@@ -12,9 +12,7 @@ namespace Lab1_1
         public int NumberOfActions { get; set; }
         public string Name { get; set; }
         public string Faction { get; set; }
-    
         public int Power { get; set; }
-
         public int currentX { get; set; }
         public int currentY { get; set; }
 
