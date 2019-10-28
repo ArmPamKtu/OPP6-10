@@ -9,6 +9,7 @@ namespace Lab1_1.AbstractFactory
         public ActionTower(int x, int y) : base(x, y)
         {
             symbol = 'A';
+            
         }
 
         public override void Update()

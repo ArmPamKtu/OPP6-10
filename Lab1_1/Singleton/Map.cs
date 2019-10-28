@@ -106,5 +106,11 @@ namespace Lab1_1
         {
             return Grid[y][x];
         }
+        public Unit[][] GetGrid()
+        {
+            return Grid;
+        }
+
+
     }
 }

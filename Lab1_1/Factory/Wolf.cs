@@ -17,12 +17,12 @@ namespace Lab1_1
         {
             return AttackLimit;
         }
-        public void AttackASpecificArea(Player player, string command, int[][] map)
+        public void AttackASpecificArea(Player player, string command, Map map)
         {
             switch (command)
             {
                 case "U":
-                    if (player.currentY + (player.Power * 2) < map.Length)
+                    if (player.currentY + (player.Power * 2) < map.GetYSize())
                     {
                         player.currentY += 2;
                     }
@@ -30,21 +30,21 @@ namespace Lab1_1
 
                     break;
                 case "R":
-                    if (player.currentX + (player.Power * 2) < map.Length)
+                    if (player.currentX + (player.Power * 2) < map.GetXSize())
                     {
                         player.currentX += 2;
                     }
                     TakeSquire(player, map);
                     break;
                 case "D":
-                    if (player.currentY - (player.Power * 2) < map.Length)
+                    if (player.currentY - (player.Power * 2) < map.GetXSize())
                     {
                         player.currentY -= 2;
                     }
                     TakeSquire(player, map);
                     break;
                 case "L":
-                    if (player.currentX - (player.Power * 2) < map.Length)
+                    if (player.currentX - (player.Power * 2) < map.GetYSize())
                     {
                         player.currentX -= 2;
                     }
@@ -59,7 +59,7 @@ namespace Lab1_1
 
         }
 
-        public void TakeSquire(Player player, int[][] map)
+        public void TakeSquire(Player player, Map map)
         {
             int startX = 0;
             int endX = 0;
@@ -71,7 +71,7 @@ namespace Lab1_1
                 startY = player.currentY;
                 endY = player.currentY + 1;
             }
-            else if (player.currentY + 1 == map.Length)
+            else if (player.currentY + 1 == map.GetYSize())
             {
                 startY = player.currentY - 1;
                 endY = player.currentY;
@@ -87,7 +87,7 @@ namespace Lab1_1
                 startX = player.currentX;
                 endX = player.currentX + 1;
             }
-            else if (player.currentX + 1 == map.Length)
+            else if (player.currentX + 1 == map.GetXSize())
             {
                 startX = player.currentX - 1;
                 endX = player.currentX;
@@ -102,7 +102,7 @@ namespace Lab1_1
             {
                 for (int j = startY; j <= endY; j++)
                 {
-                    map[j][i] = 1;
+                    map.GetUnit(i, j).TakeUnit(player);
                 }
             }
         }

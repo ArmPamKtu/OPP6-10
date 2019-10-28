@@ -8,14 +8,14 @@ namespace Lab1_1
     public class Unit : AObserver
     {
         protected char symbol = '0';
-        protected string color { get; set; }
+        protected ConsoleColor color { get; set; }
         protected Player owner { get; set; }
         protected int coordinateX { get; set; }
         protected int coordinateY { get; set; }
 
         public Unit(int x, int y)
         {
-            color = "White";
+            color = ConsoleColor.White;
             owner = null;
             coordinateX = x;
             coordinateY = y;
@@ -26,14 +26,18 @@ namespace Lab1_1
             Console.WriteLine("Unit");
         }
 
-        public void TakeUnit(char symbol, string color, Player owner)
+        public void TakeUnit(Player owner)
         {
-            this.symbol = symbol;
-            this.color = color;
+            this.symbol = owner.GetSymbol();
+            this.color = owner.GetColor();
             this.owner = owner;
         }
+        public void ResetSymbol()
+        {
+            symbol = '0';
+        }
 
-        public string GetColor()
+        public ConsoleColor GetColor()
         {
             return color;
         }

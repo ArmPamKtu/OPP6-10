@@ -21,8 +21,8 @@ namespace GameServer.Controllers
             _context = context;
             gs = new GameState();
 
-            gs.Attach(new Tree());
-            gs.Attach(new SuperObstacle());
+            /*gs.Attach(new Tree());
+            gs.Attach(new SuperObstacle());*/
 
             //generate map
             _context.Map.Add(new TempMap { Map = 0 });

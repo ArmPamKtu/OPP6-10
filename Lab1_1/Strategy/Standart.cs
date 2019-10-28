@@ -6,18 +6,20 @@ namespace Lab1_1.Streategy
 {
     public class Standart : Algorithm
     {
-        public override void Action(Player player, string command, int[][] map)
+        public override void Action(Player player, string command, Map map)
         {
+            player.SetPreviousCoordinates(player.currentX, player.currentY);
+
             player.Power = 1;
             switch (command)
             {
                 case "U":
-                    if (player.currentY + player.Power < map.Length)
+                    if (player.currentY + player.Power < map.GetYSize())
                         player.currentY += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "R":
-                    if (player.currentX + player.Power < map.Length)
+                    if (player.currentX + player.Power < map.GetXSize())
                         player.currentX += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
@@ -35,10 +37,11 @@ namespace Lab1_1.Streategy
                     player.currentX = 0;
                     player.currentY = 0;
                     break;
-            } 
-            map[player.currentY][player.currentX] = 1;
+            }
 
-            Console.WriteLine("Standart was used");
+            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+
         }
     }
 }

@@ -6,18 +6,18 @@ namespace Lab1_1.Streategy
 {
     public class Hopper : Algorithm
     {
-        public override void Action(Player player, string command, int[][] map)
+        public override void Action(Player player, string command, Map map)
         {
             player.Power = 2;
             switch (command)
             {
                 case "U":
-                    if (player.currentY + player.Power < map.Length)
+                    if (player.currentY + player.Power < map.GetYSize())
                         player.currentY += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "R":
-                    if (player.currentX + player.Power < map.Length)
+                    if (player.currentX + player.Power < map.GetXSize())
                         player.currentX += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
@@ -37,7 +37,7 @@ namespace Lab1_1.Streategy
                     break;
             }
 
-            map[player.currentY][player.currentX] = 1;
+            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
         }
 
     }

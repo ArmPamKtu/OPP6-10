@@ -6,49 +6,78 @@ namespace Lab1_1.Streategy
 {
     public class Tower : Algorithm
     {
-        public override void Action(Player player, string command, int[][] map)
+        public override void Action(Player player, string command, Map map)
         {
+            int n = 0;
             switch (command)
             {
                 case "U":
-                    while (player.currentY < map.Length)
+                    while (player.currentY >= 0)
                     {
+
                         player.Money = player.Money + player.MoneyMultiplier;
-                        map[player.currentY][player.currentX] = 1;
-                        if (player.currentY <= map.Length)
-                            player.currentY++;    
+
+                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                        if(n != 0)
+                            map.GetUnit(player.currentX, player.currentY + 1).ResetSymbol();
+
+                      
+                        if (player.currentY >= 0)
+                            player.currentY--;
+
+                        n++;
                     }
-                    player.currentY--;
+                    player.currentY++;
                     break;
                 case "R":
-                    while (player.currentX < map.Length)
+                    while (player.currentX < map.GetXSize())
                     {
                         player.Money = player.Money + player.MoneyMultiplier;
-                        map[player.currentY][player.currentX] = 1;
-                        if(player.currentX <= map.Length)
+
+                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                        if (n != 0)
+                            map.GetUnit(player.currentX - 1, player.currentY).ResetSymbol();
+
+                        if (player.currentX <= map.GetXSize())
                             player.currentX++;
+
+                        n++;
                     }
                     player.currentX--;
                     break;
                 case "D":
-                    while (player.currentY >= 0)
+                    while (player.currentY < map.GetYSize())
                     {
                         player.Money = player.Money + player.MoneyMultiplier;
-                        map[player.currentY][player.currentX] = 1;
-                        if (player.currentY >= 0)
-                            player.currentY--;
-                       
+                        
+                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                        if (n != 0)
+                            map.GetUnit(player.currentX, player.currentY - 1).ResetSymbol();
+
+                        if (player.currentY <= map.GetYSize())
+                            player.currentY++;
+
+                        n++;
                     }
-                    player.currentY++;
+                    player.currentY--;
                     break;
                 case "L":
                     while (player.currentX >= 0)
                     {
                         player.Money = player.Money + player.MoneyMultiplier;
-                        map[player.currentY][player.currentX] = 1;
+                        
+                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                        if (n != 0)
+                            map.GetUnit(player.currentX + 1, player.currentY).ResetSymbol();
+
                         if (player.currentX >= 0)
                             player.currentX--;
-                       
+
+                        n++;
                     }
                     player.currentX++;
                     break;

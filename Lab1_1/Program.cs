@@ -24,7 +24,8 @@ namespace Lab1_1
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            /*/int turnLimit = 4;
+            int turnLimit = 4;
+            /*
             int[][] map = new int[10][];
             for (int i = 0; i < 10; i++)
             {
@@ -53,44 +54,30 @@ namespace Lab1_1
             int ySize = int.Parse(Console.ReadLine());
             Map.GetInstance.GenerateGrid(xSize, ySize);
 
+            //--------
+           /* Player player = new Player();
+            Map.GetInstance.GetUnit(0, 0).TakeUnit(player);*/
+
+            //----
 
             for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
             {
                 for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
                 {
-                    Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Map.GetInstance.GetUnit(x, y).GetColor());
+                    Console.ForegroundColor =Map.GetInstance.GetUnit(x, y).GetColor();
                     Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
                 }
                 Console.WriteLine();
             }
             Console.ResetColor();
-
-            //Test conversion from array to list and vice versa
-            //------
-            Map.GetInstance.ConvertListToArray(Map.GetInstance.ConvertArrayToList());
-            Console.WriteLine();
-            Console.WriteLine("Test conversion from array to list and vice versa");
-            Console.WriteLine("------------------");
-
-            for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
-            {
-                for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
-                {
-                    Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), Map.GetInstance.GetUnit(x, y).GetColor());
-                    Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
-                }
-                Console.WriteLine();
-            }
-            Console.ResetColor();
-            Console.WriteLine("------------------");
-            //------
+         
 
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
             Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
             command = Console.ReadLine();
-            Player player = new Player();
-            player.SetName(command);
+            
+           /* player.SetName(command);
 
             CreatePlayerAsync(player).GetAwaiter().GetResult();
 
@@ -98,7 +85,7 @@ namespace Lab1_1
             while (playersInLobby.Count < maxLobbyPlayers)
             {
                 playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
-            }
+            }*/
 
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
@@ -122,15 +109,14 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(tower);
+            player.setAlgorithm(standart);
 
            /* player.Attach(new Tree());
             player.Attach(new Stone());
             player.Attach(new Tree());*/
 
             int n = 0;
-            /*
-            map[player.currentY][player.currentX] = 1;
+            map1.GetUnit(0, 0).TakeUnit( player);
 
             while (turnLimit > 0)
             {
@@ -141,21 +127,25 @@ namespace Lab1_1
               
                     Console.WriteLine("Map looks like:");
                     Console.WriteLine("___________");
-                    for (int i = 9; i >= 0; i--)
+
+                    for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
                     {
-                        Console.Write("|");
-                        for (int j = 0; j < 10; j++)
+                        for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
                         {
-                            Console.Write(map[i][j]);
+                            Console.ForegroundColor = Map.GetInstance.GetUnit(x, y).GetColor();
+                            Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
                         }
-                        Console.Write("|\n");
+                        Console.WriteLine();
                     }
+                    Console.ResetColor();
+
                     Console.WriteLine("___________");
+
                     if (n != player.NumberOfActions)
                     {
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
-                        player.move(player, command, map);
+                        player.move(player, command, Map.GetInstance);
                        //player.Notify();
                     }
 
@@ -210,7 +200,7 @@ namespace Lab1_1
 
                 turnLimit--;
                 n = 0;
-            }*/
+            }
            // shopFactory = new ShopFactory();
            // mapFactory = new MapFactory();
 
