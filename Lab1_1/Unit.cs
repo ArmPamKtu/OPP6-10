@@ -7,11 +7,11 @@ namespace Lab1_1
 {
     public class Unit : AObserver
     {
-        protected char symbol = '0';
-        protected ConsoleColor color { get; set; }
-        protected Player owner { get; set; }
-        protected int coordinateX { get; set; }
-        protected int coordinateY { get; set; }
+        public char symbol = '0';
+        public ConsoleColor color { get; set; }
+        public Player owner { get; set; }
+        public int coordinateX { get; set; }
+        public int coordinateY { get; set; }
 
         public Unit(int x, int y)
         {
@@ -21,9 +21,9 @@ namespace Lab1_1
             coordinateY = y;
         }
 
-        public override void Update()
+        public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
-            Console.WriteLine("Unit");
+            //Console.WriteLine("Unit");
         }
 
         public void TakeUnit(Player owner)
@@ -31,6 +31,12 @@ namespace Lab1_1
             this.symbol = owner.GetSymbol();
             this.color = owner.GetColor();
             this.owner = owner;
+        }
+
+        public void TakeUnit(char symbol, ConsoleColor color)
+        {
+            this.symbol = symbol;
+            this.color = color;
         }
         public void ResetSymbol()
         {
@@ -40,6 +46,11 @@ namespace Lab1_1
         public ConsoleColor GetColor()
         {
             return color;
+        }
+
+        public Player GetPlayer()
+        {
+            return owner;
         }
 
         public char GetSymbol()

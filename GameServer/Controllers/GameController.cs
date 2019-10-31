@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Lab1_1.Observer;
 using Lab1_1.AbstractFactory;
 using GameServer.Models;
+using Lab1_1;
+using Newtonsoft.Json;
 
 namespace GameServer.Controllers
 {
@@ -21,88 +23,228 @@ namespace GameServer.Controllers
             _context = context;
             gs = new GameState();
 
-            /*gs.Attach(new Tree());
-            gs.Attach(new SuperObstacle());*/
+            gs.Attach(new Tree(0, 0));
+            gs.Attach(new GoldMine(0, 0));
+            gs.Attach(new ActionTower(0, 0));
+            gs.Attach(new Wonder(0, 0));
 
-            //generate map
-            _context.Map.Add(new TempMap { Map = 0 });
+            //Generate map
+            if (_context.Map.ToList().Count < Constants.mapLenghtX * Constants.mapLenghtY)
+            {
+                Map.GetInstance.GenerateGrid(Constants.mapLenghtX, Constants.mapLenghtY);
+                _context.State.Add(new State { GameState = "Updating" });
+                for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                {
+                    for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                    {
+                        Unit u = Map.GetInstance.GetUnit(x, y);
+                        _context.Map.Add(JsonConvert.DeserializeObject<MapUnit>(JsonConvert.SerializeObject(u)));
+                    }
+                }
+            }
             _context.SaveChanges();
         }
 
-        [HttpGet("{id}", Name ="GetMap")]
-        public ActionResult<int> GetMap(long id)
+        [HttpGet("{id}", Name = "GetMap")]
+        public ActionResult<List<MapUnit>> GetMap(long id)
         {
-            var val = _context.PlayersGET_ID.ToList().Where(x => x.Id == id).FirstOrDefault();
+            var val = _context.PG_ID.ToList().Where(x => x.Id == id).FirstOrDefault();
 
             if (val == null)
             {
-                Temp2 t = new Temp2 { Id = id };
-                _context.PlayersGET_ID.Add(t);
+                PlayerGet t = new PlayerGet { Id = id };
+                _context.PG_ID.Add(t);
                 _context.SaveChanges();
             }
 
-            List<Temp2> tl = _context.PlayersGET_ID.ToList();
+            List<PlayerGet> tl = _context.PG_ID.ToList();
 
             if (tl.Count() == Constants.playerCount)
             {
-                _context.PlayersPOST_ID.RemoveRange(_context.PlayersPOST_ID);
+                _context.PP_ID.RemoveRange(_context.PP_ID);
+                State s = _context.State.First();
+                s.GameState = "Updating";
                 _context.SaveChanges();
             }
 
-            return _context.Map.First().Map;
+            return _context.Map.ToList();
         }
 
         [HttpGet("/allp", Name = "GetAllPost")]
-        public ActionResult<IEnumerable<Temp>> GetAllp()
+        public ActionResult<IEnumerable<PlayerPost>> GetAllp()
         {
-            return _context.PlayersPOST_ID.ToList();
+            return _context.PP_ID.ToList();
         }
 
         [HttpGet("/allg", Name = "GetAllGet")]
-        public ActionResult<IEnumerable<Temp2>> GetAllg()
+        public ActionResult<IEnumerable<PlayerGet>> GetAllg()
         {
-            return _context.PlayersGET_ID.ToList();
+            return _context.PG_ID.ToList();
         }
 
-
         [HttpPost("{id}", Name = "UpdateMap")]
-        public ActionResult<string> UpdatedMap(long id)
+        public ActionResult</*List<MapUnit>*/State> UpdatedMap(long id, [FromBody] List<Unit> map)
         {
-            _context.PlayersPOST_ID.ToList();
-            var val = _context.PlayersPOST_ID.ToList().Where(x => x.Id == id).FirstOrDefault();
+            Unit u;
+            List<MapUnit> mp;
 
-            if (val==null)
+            var val = _context.PP_ID.ToList().Where(x => x.Id == id).FirstOrDefault();
+
+            if (val == null)
             {
-                Temp t = new Temp { Id = id };           
-                _context.PlayersPOST_ID.Add(t);
+                mp = _context.Map.ToList();
+                PlayerPost t = new PlayerPost { Id = id };
+                _context.PP_ID.Add(t);
+
+                //Merge maps
+                Map.GetInstance.ConvertListToArray(map);
+                for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                {
+                    for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                    {
+                        u = Map.GetInstance.GetUnit(x, y);
+                        MapUnit mu = mp.ElementAt(y * Map.GetInstance.GetXSize() + x);
+
+                        if (mu.symbol == '0' && u.GetSymbol() == '0' && mu.color == (ConsoleColor)15 && u.color != (ConsoleColor)15)
+                        {
+                            mu.color = u.GetColor();
+                            mu.symbol = u.symbol;
+                            if (u.owner != null)
+                                mu.ownerName = u.owner.Name;
+                            _context.Map.Update(mu);
+                        }//testavimui
+                        //else if (u.GetSymbol() == '*')
+                        //{
+                        //    mu.color = u.GetColor();
+                        //    mu.symbol = u.symbol;
+                        //    if(u.owner != null)
+                        //        mu.ownerName = u.owner.Name;
+                        //    _context.Map.Update(mu);
+                        //}
+                        else if (mu.color != (ConsoleColor)15 && u.color != (ConsoleColor)15 && mu.color != u.color)
+                        {
+                            mu.color = (ConsoleColor)15;
+                            mu.ownerName = null;
+                            _context.Map.Update(mu);
+                        }
+                    }
+                }
                 _context.SaveChanges();
-
-                //merge maps
-
             }
-            else if(val != null && _context.PlayersPOST_ID.ToList().Count() == Constants.playerCount)
+            else if (_context.State.First().GameState == "Updated" && _context.PP_ID.ToList().Count() == Constants.playerCount)
             {
-                return "Updated";
-            }else
-            {
-                return "Updating";
-            }
-
-            if(_context.PlayersPOST_ID.ToList().Count() == Constants.playerCount)
-            {
-                _context.PlayersGET_ID.RemoveRange(_context.PlayersGET_ID);
-
-                //update map
-                _context.Map.First().Map += 1;
-                gs.Notify();
-
-                _context.SaveChanges();
-
-                return "Updated";
+                return _context.State.First();
+                //return "Updated";
             }
             else
             {
-                return "Updating";
+                return _context.State.First();
+                //return "Updating";
+            }
+
+            if (_context.PP_ID.ToList().Count() == Constants.playerCount)
+            {
+                _context.PG_ID.RemoveRange(_context.PG_ID);
+                List<Unit> temp = new List<Unit>();
+                List<Unit> unitmap = new List<Unit>();
+
+                foreach (MapUnit mu in _context.Map.ToList())
+                {
+                    unitmap.Add(JsonConvert.DeserializeObject<Unit>(JsonConvert.SerializeObject(mu)));
+                }
+                Map.GetInstance.ConvertListToArray(unitmap);
+
+                //Update map
+
+                for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                {
+                    for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                    {
+                        if (Map.GetInstance.GetUnit(x, y).GetSymbol() != '0' && Map.GetInstance.GetUnit(x, y).GetSymbol() != '*')
+                        {
+                            if (x - 1 < 0)
+                            {
+                                foreach ((int, int) t in Constants.cordsMinusX)
+                                {
+                                    u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
+                                    if (u.symbol == '0' || u.symbol == '*')
+                                    {
+                                        temp.Add(u);
+                                    }
+                                }
+                            }
+                            else if (x + 1 >= Map.GetInstance.GetXSize())
+                            {
+                                foreach ((int, int) t in Constants.cordsPlusX)
+                                {
+                                    u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
+                                    if (u.symbol == '0' || u.symbol == '*')
+                                    {
+                                        temp.Add(u);
+                                    }
+                                }
+                            }
+                            else if (y - 1 < 0)
+                            {
+                                foreach ((int, int) t in Constants.cordsMinusY)
+                                {
+                                    u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
+                                    if (u.symbol == '0' || u.symbol == '*')
+                                    {
+                                        temp.Add(u);
+                                    }
+                                }
+                            }
+                            else if (y + 1 >= Map.GetInstance.GetYSize())
+                            {
+                                foreach ((int, int) t in Constants.cordsPlusY)
+                                {
+                                    u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
+                                    if (u.symbol == '0' || u.symbol == '*')
+                                    {
+                                        temp.Add(u);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach ((int, int) t in Constants.cords)
+                                {
+                                    u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
+                                    if (u.symbol == '0' || u.symbol == '*')
+                                    {
+                                        temp.Add(u);
+                                    }
+                                }
+                            }
+                            gs.Notify(Map.GetInstance, (x, y), temp);
+
+                            //Update player
+
+
+                            temp.Clear();
+                        }
+                    }
+                }
+
+                mp = _context.Map.ToList();
+                List<Unit> ul = Map.GetInstance.ConvertArrayToList();
+                for (int x=0; x<mp.Count; x++)
+                {
+                    mp[x].color = ul[x].color;
+                    mp[x].symbol = ul[x].symbol;
+                    _context.Map.Update(mp[x]);
+                }
+
+                State s = _context.State.First();
+                s.GameState = "Updated";
+                _context.SaveChanges();
+
+                return _context.State.First();
+            }
+            else
+            {
+                return _context.State.First();
             }
         }
     }

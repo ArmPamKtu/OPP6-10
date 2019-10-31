@@ -7,7 +7,7 @@ namespace Lab1_1
 {
     public class Player : MovementStrategy
     {
-        
+        public long id { get; set; }
         public int Money { get; set; }
         public int MoneyMultiplier { get; set; }
         public int NumberOfActions { get; set; }

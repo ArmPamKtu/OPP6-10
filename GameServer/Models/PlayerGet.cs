@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace GameServer.Models
 {
-    public class Temp2
+    public class PlayerGet
     {
         public long Id { get; set; }
 
-        public Temp2() { }
+        public PlayerGet() { }
     }
 }

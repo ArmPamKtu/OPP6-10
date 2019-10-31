@@ -7,5 +7,6 @@ namespace Lab1_1.Observer
 {
     public class GameState : Subject
     {
+        string state { get; set; }
     }
 }

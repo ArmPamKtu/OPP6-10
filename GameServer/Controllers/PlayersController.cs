@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/player")]
     [ApiController]
     public class PlayersController : ControllerBase
     {
@@ -42,6 +42,18 @@ namespace GameServer.Controllers
             }
 
             return Ok(player);
+        }
+
+        //GET api/player/5
+        [HttpGet("{id}", Name = "GetPlayer")]
+        public ActionResult<Player> GetById(long id)
+        {
+            Player p = _context.Players.Find(id);
+            if (p == null)
+            {
+                return NotFound("player not found");
+            }
+            return p;
         }
 
         // POST api/player

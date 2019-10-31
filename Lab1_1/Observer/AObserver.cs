@@ -6,6 +6,6 @@ namespace Lab1_1.Observer
 {
     public abstract class AObserver
     {
-        public abstract void Update();
+        public abstract void Update(Map map, (int,int) cords, List<Unit> area);
     }
 }

@@ -19,11 +19,11 @@ namespace Lab1_1.Observer
             observers.Remove(observer);
         }
 
-        public void Notify()
+        public void Notify(Map map, (int, int) cords, List<Unit> area)
         {
             foreach(AObserver o in observers)
             {
-                o.Update();
+                o.Update(map, cords, area);
             }
         }
     }

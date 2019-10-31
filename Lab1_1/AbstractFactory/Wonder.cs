@@ -4,17 +4,21 @@ using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    class Wonder: SuperObstacle
+    public class Wonder: SuperObstacle
     {
         public Wonder(int x, int y):base(x, y)
         {
             symbol = 'W';
         }
 
-        public override void Update()
+        public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
             //Player has to win
             //GameController.EndGame(owner)
+
+            if (map.GetUnit(cords.Item1, cords.Item2).GetSymbol() == this.symbol)
+                if (area.TrueForAll(item => item.color == area[0].color))
+                    map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
         }
     }
 }

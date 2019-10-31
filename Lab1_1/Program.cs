@@ -12,17 +12,18 @@ namespace Lab1_1
     class Program
     {
         private static Factory factory;
-        private static Player player;
+        private static Player player = new Player();
         private static Map map;
         private static ObstacleAbstractFactory shopFactory;
         private static ObstacleAbstractFactory mapFactory;
 
-        private static string requestUri = "/api/players/";
+        private static string requestUri = "/api/player/";
+        private static string gmRequestUri = "/api/gamecontroller/";
         static string mediaType = "application/json";
         private static int maxLobbyPlayers = 4;
 
         static HttpClient client = new HttpClient();
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             int turnLimit = 4;
             /*
@@ -41,7 +42,7 @@ namespace Lab1_1
 
             client = new HttpClient(clientHandler);
 
-            client.BaseAddress = new Uri("https://localhost:44372/"); //api /player/");
+            client.BaseAddress = new Uri("https://localhost:44394/"); //api /player/");
             client.DefaultRequestHeaders.Accept.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(
@@ -55,10 +56,14 @@ namespace Lab1_1
             Map.GetInstance.GenerateGrid(xSize, ySize);
 
             //--------
-           /* Player player = new Player();
-            Map.GetInstance.GetUnit(0, 0).TakeUnit(player);*/
+            /* Player player = new Player();
+             Map.GetInstance.GetUnit(0, 0).TakeUnit(player);*/
 
             //----
+
+            //List<Unit> mappp = await GetMap(1);
+            //Console.WriteLine(mappp.Count);
+            //Map.GetInstance.ConvertListToArray(mappp);
 
             for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
             {
@@ -76,16 +81,15 @@ namespace Lab1_1
             Console.WriteLine("Welcome to splash Wars!");
             Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
             command = Console.ReadLine();
-            
-           /* player.SetName(command);
 
-            CreatePlayerAsync(player).GetAwaiter().GetResult();
-
-            ICollection<Player> playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
-            while (playersInLobby.Count < maxLobbyPlayers)
-            {
-                playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
-            }*/
+            //player.Name = command;
+            //await CreatePlayerAsync(player);
+            //ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            //while (playersInLobby.Count < maxLobbyPlayers)
+            //{
+            //    //Console.WriteLine("Waiting for other players");
+            //    playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
+            //}
 
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
@@ -110,10 +114,6 @@ namespace Lab1_1
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
             player.setAlgorithm(standart);
-
-           /* player.Attach(new Tree());
-            player.Attach(new Stone());
-            player.Attach(new Tree());*/
 
             int n = 0;
             map1.GetUnit(0, 0).TakeUnit( player);
@@ -146,7 +146,6 @@ namespace Lab1_1
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
                         player.move(player, command, Map.GetInstance);
-                       //player.Notify();
                     }
 
                 }
@@ -231,11 +230,6 @@ namespace Lab1_1
                     default:
                         break;
                 }
-                //  var ats = GetResponse(client);
-
-                // RunAsync().GetAwaiter().GetResult();
-
-
             }
         }
         static void ShowPlayer(Player player)
@@ -243,74 +237,6 @@ namespace Lab1_1
             Console.WriteLine("Player name: " + player.Name);
         }
 
-        static async Task RunAsync()
-        {
-            // Update port # in the following line.
-            client.BaseAddress = new Uri("https://localhost:50140/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
-            try
-            {
-                string command = "";
-                Console.WriteLine("1.1)\tCreate the player");
-                command = Console.ReadLine();
-                //        Player player = new Player
-                //        {
-                //            Name = "Studentas-" + playersList.Count.ToString(),
-                //        };
-                ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
-                while (playersInLobby.Count < maxLobbyPlayers)
-                {
-                    playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
-                }
-
-                /* // Create a new product
-                 Product product = new Product
-                 {
-                     Name = "Gizmo",
-                     Price = 100,
-                     Category = "Widgets"
-                 };
-
-
-                 var url =  CreateProductAsync(product);
-                 Console.WriteLine($"Created at {url}");*/
-
-                // Create a new player
-                Console.WriteLine("1.1)\tCreate the player");
-        //        Player player = new Player
-        //        {
-        //            Name = "Studentas-" + playersList.Count.ToString(),
-        //        };
-
-
-                // Get the product
-                var ats = await GetProductAsync("api/values");
-                Console.WriteLine(ats);
-
-                // Update the product
-           /*     Console.WriteLine("Updating price...");
-                product.Price = 80;
-                await UpdateProductAsync(product);
-
-                // Get the updated product
-                product = await GetProductAsync(url.PathAndQuery);
-                ShowProduct(product);
-
-                // Delete the product
-                var statusCode = await DeleteProductAsync(product.Id);
-                Console.WriteLine($"Deleted (HTTP Status = {(int)statusCode})");
-                */
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            Console.ReadLine();
-        }
         static async Task<Uri> CreatePlayerAsync(Player player)
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(
@@ -330,29 +256,23 @@ namespace Lab1_1
         static async Task<ICollection<Player>> GetAllPlayersAsync(string path)
         {
             ICollection<Player> players = null;
-            HttpResponseMessage response = await client.GetAsync(path + "api/players");
+            HttpResponseMessage response = await client.GetAsync(path + "api/player");
             if (response.IsSuccessStatusCode)
             {
                 players = await response.Content.ReadAsAsync<ICollection<Player>>();
             }
             return players;
         }
-        static async Task<List<string>> GetProductAsync(string path)
+
+        static async Task<List<Unit>> GetMap( int id)
         {
-           
-            List<String> a = new List<String>();
-            HttpResponseMessage response = await client.GetAsync(path);
-          
+            List<Unit> map = null;
+            HttpResponseMessage response = await client.GetAsync(gmRequestUri + $"{id}");
             if (response.IsSuccessStatusCode)
             {
-                
-                a = response.Content.ReadAsAsync<List<string>>().Result;
+                map = await response.Content.ReadAsAsync<List<Unit>>();
             }
-
-            foreach(string var in a)
-                Console.WriteLine(var);
-
-            return a;
+            return map;
         }
     }
 }
