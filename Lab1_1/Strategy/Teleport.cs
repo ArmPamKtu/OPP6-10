@@ -10,6 +10,7 @@ namespace Lab1_1.Streategy
         public override void Action(Player player, string command, Map map)
         {
             player.Power = 1;
+            player.SetPreviousCoordinates(player.currentX, player.currentY);
             player.currentX = Int32.Parse(command[0].ToString());
             player.currentY = Int32.Parse(command[1].ToString());
 
@@ -17,6 +18,7 @@ namespace Lab1_1.Streategy
             {
                 map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
                 player.Money = player.Money + player.MoneyMultiplier;
+                map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
             }
         }
     }

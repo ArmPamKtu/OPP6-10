@@ -14,8 +14,8 @@ namespace Lab1_1.Streategy
             switch (command)
             {
                 case "U":
-                    if (player.currentY + player.Power < map.GetYSize())
-                        player.currentY += player.Power;
+                    if (player.currentY - player.Power > -1)
+                        player.currentY -= player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "R":
@@ -24,8 +24,8 @@ namespace Lab1_1.Streategy
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "D":
-                    if (player.currentY - player.Power > -1)
-                        player.currentY -= player.Power;
+                    if (player.currentY + player.Power < map.GetYSize())
+                        player.currentY += player.Power;
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 case "L":
@@ -34,13 +34,15 @@ namespace Lab1_1.Streategy
                     player.Money = player.Money + player.MoneyMultiplier;
                     break;
                 default:
+                    map.GetUnit(player.currentX, player.currentY).ResetSymbol();
                     player.currentX = 0;
                     player.currentY = 0;
                     break;
             }
 
-            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+           
             map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
 
         }
     }

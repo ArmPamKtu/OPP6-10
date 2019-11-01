@@ -8,6 +8,7 @@ namespace Lab1_1.Streategy
     {
         public override void Action(Player player, string command, Map map)
         {
+            player.SetPreviousCoordinates(player.currentX, player.currentY);
             int n = 0;
             switch (command)
             {
@@ -82,6 +83,7 @@ namespace Lab1_1.Streategy
                     player.currentX++;
                     break;
                 default:
+                    map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
                     player.currentX = 0;
                     player.currentY = 0;
                     break;
