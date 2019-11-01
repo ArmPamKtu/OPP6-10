@@ -10,6 +10,10 @@ namespace Lab1_1.AbstractFactory
         {
             symbol = 'G';
         }
+        public override void ResetSymbol()
+        {
+            symbol = 'G';
+        }
 
         public override void Update(Map map, (int, int) cords, List<Unit> area)
         {

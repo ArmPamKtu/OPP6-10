@@ -1,4 +1,5 @@
-﻿using Lab1_1.Streategy;
+﻿using Lab1_1.CommandPattern;
+using Lab1_1.Streategy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,10 @@ namespace Lab1_1
         private ConsoleColor color { get; set; }
         public int currentX { get; set; }
         public int currentY { get; set; }
+
+
+
+        private List<Command> _commands = new List<Command>();
 
 
         public Player(string faction) :base("")

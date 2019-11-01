@@ -10,7 +10,10 @@ namespace Lab1_1.AbstractFactory
         {
             symbol = 'T';
         }
-
+        public override void ResetSymbol()
+        {
+            symbol = 'T';
+        }
         public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
             //Tree has to disappear and player has to take this unit

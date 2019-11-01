@@ -38,7 +38,7 @@ namespace Lab1_1
             this.symbol = symbol;
             this.color = color;
         }
-        public void ResetSymbol()
+        public virtual void ResetSymbol()
         {
             symbol = '0';
         }

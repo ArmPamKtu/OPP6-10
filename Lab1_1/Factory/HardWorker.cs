@@ -23,5 +23,4 @@ namespace Lab1_1
             NumberOfActions = 8;
         }
     }
-    //gali tureti savo specialu ejima ar galia, kad unikalumas butu
 }

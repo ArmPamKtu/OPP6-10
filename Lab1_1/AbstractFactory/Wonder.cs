@@ -10,7 +10,10 @@ namespace Lab1_1.AbstractFactory
         {
             symbol = 'W';
         }
-
+        public override void ResetSymbol()
+        {
+            symbol = 'W';
+        }
         public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
             //Player has to win

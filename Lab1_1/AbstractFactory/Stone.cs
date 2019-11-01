@@ -11,6 +11,11 @@ namespace Lab1_1.AbstractFactory
             symbol = 'S';
         }
 
+        public override void ResetSymbol()
+        {
+            symbol = 'S';
+        }
+
         public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
             //Nothing happens. A stone is a stone
