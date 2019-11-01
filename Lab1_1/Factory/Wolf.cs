@@ -19,9 +19,12 @@ namespace Lab1_1
         }
         public void AttackASpecificArea(Player player, string command, Map map)
         {
+
+            player.SetPreviousCoordinates(player.currentX, player.currentY);
+
             switch (command)
             {
-                case "U":
+                case "D":
                     if (player.currentY + (player.Power * 2) < map.GetYSize())
                     {
                         player.currentY += 2;
@@ -36,7 +39,7 @@ namespace Lab1_1
                     }
                     TakeSquire(player, map);
                     break;
-                case "D":
+                case "U":
                     if (player.currentY - (player.Power * 2) < map.GetXSize())
                     {
                         player.currentY -= 2;
@@ -51,10 +54,13 @@ namespace Lab1_1
                     TakeSquire(player, map);
                     break;
                 default:
+                    map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
                     player.currentX = 0;
                     player.currentY = 0;
                     break;
             }
+            map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
             AttackLimit = 0;
 
         }
@@ -103,6 +109,7 @@ namespace Lab1_1
                 for (int j = startY; j <= endY; j++)
                 {
                     map.GetUnit(i, j).TakeUnit(player);
+                    map.GetUnit(i, j).ResetSymbol();
                 }
             }
         }

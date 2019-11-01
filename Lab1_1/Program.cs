@@ -113,10 +113,10 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(hopper);
+            player.setAlgorithm(standart);
 
             int n = 0;
-            map1.GetUnit(0, 0).TakeUnit( player);
+            map1.GetUnit(0, 0).TakeUnit(player);
 
             while (turnLimit > 0)
             {
@@ -187,7 +187,7 @@ namespace Lab1_1
                         Console.WriteLine("As a Wolf you can attack an area and capture it");
                         Console.WriteLine("If you want to attack, type a direction: R,L,U,D");
                         command = Console.ReadLine();
-                        ((Wolf)player).AttackASpecificArea(player, command, map);
+                        ((Wolf)player).AttackASpecificArea(player, command, Map.GetInstance);
 
                     }
                 }
