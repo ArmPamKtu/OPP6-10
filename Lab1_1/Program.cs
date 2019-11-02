@@ -113,16 +113,19 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(standart);
+            player.setAlgorithm(teleport);
 
             int n = 0;
             map1.GetUnit(0, 0).TakeUnit(player);
 
+            player.currentX = 0;
+            player.currentY = 0;
             while (turnLimit > 0)
             {
-
+                ((Teleport)teleport).SetStartingPosition(player.currentX, player.currentY);
                 while (n < player.NumberOfActions)
                 {
+                    
                     n++;
               
                     Console.WriteLine("Map looks like:");
@@ -156,6 +159,10 @@ namespace Lab1_1
                 if(command.Equals("Yes"))
                 {
                     player.Undo();
+                }
+                else
+                {
+                    player.ResetCommands();
                 }
 
                 Console.WriteLine("You have " + player.Money + " Money");

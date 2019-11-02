@@ -10,6 +10,13 @@ namespace Lab1_1.Streategy
         {
             player.SetPreviousCoordinates(player.currentX, player.currentY);
             player.Power = 2;
+
+            if (undo == true)
+            {
+                map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+            }
+
             switch (command)
             {
                 case "U":
@@ -20,17 +27,17 @@ namespace Lab1_1.Streategy
                 case "R":
                     if (player.currentX + player.Power < map.GetXSize())
                         player.currentX += player.Power;
-                    player.Money = player.Money + player.MoneyMultiplier;
+                   
                     break;
                 case "D":
                     if (player.currentY + player.Power < map.GetYSize())
                         player.currentY += player.Power;
-                    player.Money = player.Money + player.MoneyMultiplier;
+                  
                     break;
                 case "L":
                     if (player.currentX - player.Power > -1)
                         player.currentX -= player.Power;
-                    player.Money = player.Money + player.MoneyMultiplier;
+                    
                     break;
                 default:
                     map.GetUnit(player.currentX, player.currentY).ResetSymbol();
@@ -39,10 +46,16 @@ namespace Lab1_1.Streategy
                     break;
             }
 
-           
-            map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
-            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-
+            if (undo == false)
+            {
+                player.Money = player.Money + player.MoneyMultiplier;
+                map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+                map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            }
+            else
+            {
+                player.Money = player.Money - player.MoneyMultiplier;
+            }
         }
 
     }

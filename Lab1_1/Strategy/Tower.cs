@@ -23,7 +23,13 @@ namespace Lab1_1.Streategy
                         if(n != 0)
                             map.GetUnit(player.currentX, player.currentY + 1).ResetSymbol();
 
-                      
+                        if (undo == true)
+                        {
+                            map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                            map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                        }
+
+
                         if (player.currentY >= 0)
                             player.currentY--;
 
@@ -41,8 +47,16 @@ namespace Lab1_1.Streategy
                         if (n != 0)
                             map.GetUnit(player.currentX - 1, player.currentY).ResetSymbol();
 
+
+                        if (undo == true)
+                        {
+                            map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                            map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                        }
+
                         if (player.currentX <= map.GetXSize())
                             player.currentX++;
+
 
                         n++;
                     }
@@ -57,6 +71,13 @@ namespace Lab1_1.Streategy
 
                         if (n != 0)
                             map.GetUnit(player.currentX, player.currentY - 1).ResetSymbol();
+
+                        if (undo == true)
+                        {
+                            map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                            map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                        }
+
 
                         if (player.currentY <= map.GetYSize())
                             player.currentY++;
@@ -74,6 +95,12 @@ namespace Lab1_1.Streategy
 
                         if (n != 0)
                             map.GetUnit(player.currentX + 1, player.currentY).ResetSymbol();
+
+                        if (undo == true)
+                        {
+                            map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                            map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                        }
 
                         if (player.currentX >= 0)
                             player.currentX--;

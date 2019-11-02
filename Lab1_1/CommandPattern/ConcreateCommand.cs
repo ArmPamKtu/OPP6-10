@@ -41,7 +41,7 @@ namespace Lab1_1.CommandCommandPattern
                     return "R";
                 case "R":
                     return "L";
-                default: return "BadDirection";
+                default: return direction;
             }
         }
     }

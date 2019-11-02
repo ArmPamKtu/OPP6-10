@@ -69,7 +69,11 @@ namespace Lab1_1
             previousX = x;
             previousY = y;
         }
-
+        public void ResetCommands()
+        {
+            _commands.Clear();
+            _curentMoveNumber = 0;
+        }
         public int GetPreviousX()
         {
             return previousX;
@@ -92,6 +96,16 @@ namespace Lab1_1
                     command.UnExecute();
                 }
             }
+
+            if(getAlgorithm() is Teleport)
+            {
+                Map.GetInstance.GetUnit(((Teleport)getAlgorithm()).GetStartingX(), ((Teleport)getAlgorithm()).GetStartingX()).symbol = symbol;
+                currentX = ((Teleport)getAlgorithm()).GetStartingX();
+                currentY = ((Teleport)getAlgorithm()).GetStartingX();
+            }
+            else
+                Map.GetInstance.GetUnit(currentX, currentY).symbol = symbol;
+
         }
         public void ExecuteMove(string commandDirection, Player player)
         {
