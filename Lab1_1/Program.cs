@@ -113,7 +113,7 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(tower);
+            player.setAlgorithm(hopper);
 
             int n = 0;
             map1.GetUnit(0, 0).TakeUnit(player);
@@ -123,94 +123,98 @@ namespace Lab1_1
             while (turnLimit > 0)
             {
                 ((Teleport)teleport).SetStartingPosition(player.currentX, player.currentY);
-                while (n < player.NumberOfActions)
+                bool finishedIteration = false;
+                while (!finishedIteration)
                 {
-                    
-                    n++;
-              
-                    Console.WriteLine("Map looks like:");
-                    Console.WriteLine("___________");
-
-                    for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                    while (n < player.NumberOfActions)
                     {
-                        for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
-                        {
-                            Console.ForegroundColor = Map.GetInstance.GetUnit(x, y).GetColor();
-                            Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
-                        }
-                        Console.WriteLine();
-                    }
-                    Console.ResetColor();
 
-                    Console.WriteLine("___________");
-                    bool succesfulMove = true;
-                    if (n != player.NumberOfActions)
-                    {
-                        while (succesfulMove)
-                        {
-                            Console.WriteLine("Choose where to go next R,L,U,D?");
-                            command = Console.ReadLine();
+                        n++;
 
-                            switch (command)
+                        Console.WriteLine("Map looks like:");
+                        Console.WriteLine("___________");
+
+                        for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                        {
+                            for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
                             {
-                                case ("D"):
-                                    if (player.currentY + player.Power < Map.GetInstance.GetYSize())
-                                    {
-                                        player.ExecuteMove(command, player);
-                                        succesfulMove = false;
-                                    }
-                                    else
-                                        Console.WriteLine("You are at the edge of the map");
-                                    break;
-                                case ("U"):
-                                    if (player.currentY - player.Power >= 0)
-                                    {
-                                        player.ExecuteMove(command, player);
-                                        succesfulMove = false;
-                                    }
-                                    else
-                                        Console.WriteLine("You are at the edge of the map");
-                                    break;
-                                case ("R"):
-                                    if (player.currentX + player.Power < Map.GetInstance.GetXSize())
-                                    {
-                                        player.ExecuteMove(command, player);
-                                        succesfulMove = false;
-                                    }
-                                    else
-                                        Console.WriteLine("You are at the edge of the map");
-                                    break;
-                                case ("L"):
-                                    if (player.currentX - player.Power >= 0)
-                                    {
-                                        player.ExecuteMove(command, player);
-                                        succesfulMove = false;
-                                    }
-                                    else
-                                        Console.WriteLine("You are at the edge of the map");
-                                    break;
-                                    
-
+                                Console.ForegroundColor = Map.GetInstance.GetUnit(x, y).GetColor();
+                                Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
                             }
-                           // player.ExecuteMove(command, player);
+                            Console.WriteLine();
+                        }
+                        Console.ResetColor();
+
+                        Console.WriteLine("___________");
+
+                        bool succesfulMove = true;
+                        if (n != player.NumberOfActions)
+                        {
+                            while (succesfulMove)
+                            {
+                                Console.WriteLine("Choose where to go next R,L,U,D?");
+                                command = Console.ReadLine();
+
+                                switch (command)
+                                {
+                                    case ("D"):
+                                        if (player.currentY + player.Power < Map.GetInstance.GetYSize())
+                                        {
+                                            player.ExecuteMove(command, player);
+                                            succesfulMove = false;
+                                        }
+                                        else
+                                            Console.WriteLine("You are at the edge of the map");
+                                        break;
+                                    case ("U"):
+                                        if (player.currentY - player.Power >= 0)
+                                        {
+                                            player.ExecuteMove(command, player);
+                                            succesfulMove = false;
+                                        }
+                                        else
+                                            Console.WriteLine("You are at the edge of the map");
+                                        break;
+                                    case ("R"):
+                                        if (player.currentX + player.Power < Map.GetInstance.GetXSize())
+                                        {
+                                            player.ExecuteMove(command, player);
+                                            succesfulMove = false;
+                                        }
+                                        else
+                                            Console.WriteLine("You are at the edge of the map");
+                                        break;
+                                    case ("L"):
+                                        if (player.currentX - player.Power >= 0)
+                                        {
+                                            player.ExecuteMove(command, player);
+                                            succesfulMove = false;
+                                        }
+                                        else
+                                            Console.WriteLine("You are at the edge of the map");
+                                        break;
+                                }
+                            }
+                            succesfulMove = true;
                         }
 
-                        succesfulMove = true;
-                        //  player.move(player, command, Map.GetInstance);
                     }
-
+                    Console.WriteLine("\n\n");
+                    Console.WriteLine("Would you like to undo your moves? (Yes/No)");
+                    command = Console.ReadLine();
+                    if (command.Equals("Yes"))
+                    {
+                        player.Undo();
+                        finishedIteration = false;
+                    }
+                    else
+                    {
+                        player.ResetCommands();
+                        finishedIteration = true;
+                    }
+                    n = 0;
                 }
-                Console.WriteLine("\n\n");
-                Console.WriteLine("Would you like to undo your moves? (Yes/No)");
-                command = Console.ReadLine();
-                if(command.Equals("Yes"))
-                {
-                    player.Undo();
-                }
-                else
-                {
-                    player.ResetCommands();
-                }
+            
 
                 Console.WriteLine("You have " + player.Money + " Money");
                 Console.WriteLine("Do you want to move like:");
@@ -263,7 +267,7 @@ namespace Lab1_1
                     ((Tower)player.getAlgorithm()).ResetStartingList();
 
                 turnLimit--;
-                n = 0;
+               
             }
            // shopFactory = new ShopFactory();
            // mapFactory = new MapFactory();
