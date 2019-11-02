@@ -113,7 +113,7 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(hopper);
+            player.setAlgorithm(tower);
 
             int n = 0;
             map1.GetUnit(0, 0).TakeUnit(player);

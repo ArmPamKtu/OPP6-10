@@ -22,7 +22,7 @@ namespace Lab1_1.Streategy
                 case "U":
                     if (undo == false)
                     {
-                        while (player.currentY >= 0)
+                        while (player.currentY >= 0 )
                         {
 
                             player.Money = player.Money + player.MoneyMultiplier;
@@ -39,12 +39,17 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentY >= 0)
+                            if (player.currentY >= 0 && Map.GetInstance.GetUnit(player.currentX, player.currentY - 1).symbol.Equals('0'))
                                 player.currentY--;
+                            else
+                                break;
 
                             n++;
                         }
-                        player.currentY++;
+
+
+
+                        //player.currentY++;
                     }
                     else
                     {
@@ -84,13 +89,17 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentX <= map.GetXSize())
+                            if (player.currentX <= map.GetXSize() && Map.GetInstance.GetUnit(player.currentX + 1, player.currentY).symbol.Equals('0'))
                                 player.currentX++;
-
+                            else
+                                break;
 
                             n++;
                         }
-                        player.currentX--;
+
+
+
+                        //player.currentX--;
                     }
                     else
                     {
@@ -113,7 +122,7 @@ namespace Lab1_1.Streategy
                 case "D":
                     if (undo == false)
                     {
-                        while (player.currentY < map.GetYSize())
+                        while (player.currentY < map.GetYSize() )
                         {
                             player.Money = player.Money + player.MoneyMultiplier;
 
@@ -130,12 +139,18 @@ namespace Lab1_1.Streategy
                             }
 
 
-                            if (player.currentY <= map.GetYSize())
+                            if (player.currentY <= map.GetYSize() && Map.GetInstance.GetUnit(player.currentX, player.currentY + 1).symbol.Equals('0'))
                                 player.currentY++;
+                            else
+                                break;
 
                             n++;
                         }
-                        player.currentY--;
+
+
+
+
+                        //player.currentY--;
                     }
                     else
                     {
@@ -174,12 +189,17 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentX >= 0)
+                            if (player.currentX >= 0 && Map.GetInstance.GetUnit(player.currentX - 1, player.currentY).symbol.Equals('0'))
                                 player.currentX--;
+                            else
+                                break;
 
                             n++;
                         }
-                        player.currentX++;
+
+
+
+                        //player.currentX++;
                     }
                     else
                     {
