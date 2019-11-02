@@ -6,7 +6,7 @@ namespace Lab1_1.Streategy
 {
     public class Tower : Algorithm
     {
-        public override void Action(Player player, string command, Map map)
+        public override void Action(Player player, string command, Map map, bool undo)
         {
             player.SetPreviousCoordinates(player.currentX, player.currentY);
             int n = 0;

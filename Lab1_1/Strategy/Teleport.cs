@@ -7,7 +7,7 @@ namespace Lab1_1.Streategy
     public class Teleport : Algorithm
     {
 
-        public override void Action(Player player, string command, Map map)
+        public override void Action(Player player, string command, Map map, bool undo)
         {
             player.Power = 1;
             player.SetPreviousCoordinates(player.currentX, player.currentY);

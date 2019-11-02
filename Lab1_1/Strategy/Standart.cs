@@ -6,7 +6,7 @@ namespace Lab1_1.Streategy
 {
     public class Standart : Algorithm
     {
-        public override void Action(Player player, string command, Map map)
+        public override void Action(Player player, string command, Map map, bool undo)
         {
             player.SetPreviousCoordinates(player.currentX, player.currentY);
 
@@ -40,9 +40,17 @@ namespace Lab1_1.Streategy
                     break;
             }
 
-           
-            map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
-            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            if (undo == false)
+            {
+
+                map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+                map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            }
+            else
+            {
+                map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+            }
 
         }
     }

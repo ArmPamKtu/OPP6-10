@@ -145,10 +145,19 @@ namespace Lab1_1
                     {
                         Console.WriteLine("Choose where to go next R,L,U,D?");
                         command = Console.ReadLine();
-                        player.move(player, command, Map.GetInstance);
+                        player.ExecuteMove(command, player);
+                      //  player.move(player, command, Map.GetInstance);
                     }
 
                 }
+                Console.WriteLine("\n\n");
+                Console.WriteLine("Would you like to undo your moves? (Yes/No)");
+                command = Console.ReadLine();
+                if(command.Equals("Yes"))
+                {
+                    player.Undo();
+                }
+
                 Console.WriteLine("You have " + player.Money + " Money");
                 Console.WriteLine("Do you want to move like:");
                 Console.WriteLine("Tower - go till the end of the line");

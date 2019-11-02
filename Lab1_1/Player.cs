@@ -1,4 +1,5 @@
-﻿using Lab1_1.CommandPattern;
+﻿using Lab1_1.CommandCommandPattern;
+using Lab1_1.CommandPattern;
 using Lab1_1.Streategy;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Lab1_1
 
 
         private List<Command> _commands = new List<Command>();
-
+        private int _curentMoveNumber = 0;
 
         public Player(string faction) :base("")
         {
@@ -77,6 +78,31 @@ namespace Lab1_1
         {
             return previousY;
         }
+
+
+        public void Undo()
+        {
+            Console.WriteLine("Undoing your moves");
+
+            for(int i = 0; i < NumberOfActions; i++)
+            {
+                if(_curentMoveNumber > 0)
+                {
+                    Command command = _commands[--_curentMoveNumber] as Command;
+                    command.UnExecute();
+                }
+            }
+        }
+        public void ExecuteMove(string commandDirection, Player player)
+        {
+            Command command = new ConcreateCommand(commandDirection, player);
+
+            command.Execute();
+
+            _commands.Add(command);
+            _curentMoveNumber++;
+        }
+
     }
     public class gamePlayer : Player
     {

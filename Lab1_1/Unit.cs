@@ -43,6 +43,11 @@ namespace Lab1_1
             symbol = '0';
         }
 
+        public void ResetOwner()
+        {
+            owner = null;
+            color = ConsoleColor.White;
+        }
         public ConsoleColor GetColor()
         {
             return color;
