@@ -21,7 +21,7 @@ namespace Lab1_1
         private int previousY { get; set; }
 
         private char symbol = '*';
-        private ConsoleColor color { get; set; }
+        public ConsoleColor color { get; set; }
         public int currentX { get; set; }
         public int currentY { get; set; }
 

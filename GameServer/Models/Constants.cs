@@ -8,8 +8,10 @@ namespace GameServer.Models
     public class Constants
     {
         public const int playerCount = 4;
-        public const int mapLenghtX = 4;
-        public const int mapLenghtY = 4;
+        public const int mapLenghtX = 10;
+        public const int mapLenghtY = 10;
+        public const int numberOfActions = 7;
+        public const int moneyMulti = 1;
 
         public static List<(int, int)> cordsMinusY = new List<(int, int)>
         {

@@ -32,7 +32,7 @@ namespace GameServer.Controllers
             if (_context.Map.ToList().Count < Constants.mapLenghtX * Constants.mapLenghtY)
             {
                 Map.GetInstance.GenerateGrid(Constants.mapLenghtX, Constants.mapLenghtY);
-                _context.State.Add(new State { GameState = "Updating" });
+                _context.State.Add(new State { StateGame = "Updating" });
                 for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
                 {
                     for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
@@ -63,7 +63,7 @@ namespace GameServer.Controllers
             {
                 _context.PP_ID.RemoveRange(_context.PP_ID);
                 State s = _context.State.First();
-                s.GameState = "Updating";
+                s.StateGame = "Updating";
                 _context.SaveChanges();
             }
 
@@ -74,6 +74,15 @@ namespace GameServer.Controllers
         public ActionResult<IEnumerable<PlayerPost>> GetAllp()
         {
             return _context.PP_ID.ToList();
+        }
+
+        [HttpDelete]
+        public IActionResult ResetGame()
+        {
+            _context.Map.RemoveRange(_context.Map);
+            _context.Players.RemoveRange(_context.Players);
+            _context.SaveChanges();
+            return NoContent();
         }
 
         [HttpGet("/allg", Name = "GetAllGet")]
@@ -109,29 +118,30 @@ namespace GameServer.Controllers
                         {
                             mu.color = u.GetColor();
                             mu.symbol = u.symbol;
-                            if (u.owner != null)
-                                mu.ownerName = u.owner.Name;
+                            //if (u.owner != null)
+                            //    mu.ownerName = u.owner.Name;
                             _context.Map.Update(mu);
                         }//testavimui
-                        //else if (u.GetSymbol() == '*')
-                        //{
-                        //    mu.color = u.GetColor();
-                        //    mu.symbol = u.symbol;
-                        //    if(u.owner != null)
-                        //        mu.ownerName = u.owner.Name;
-                        //    _context.Map.Update(mu);
-                        //}
+                        else if (u.GetSymbol() == '*')
+                        {
+                            mu.color = u.GetColor();
+                            mu.symbol = u.symbol;
+                            //if (u.owner != null)
+                            //    mu.ownerName = u.owner.Name;
+                            _context.Map.Update(mu);
+                        }
                         else if (mu.color != (ConsoleColor)15 && u.color != (ConsoleColor)15 && mu.color != u.color)
                         {
                             mu.color = (ConsoleColor)15;
-                            mu.ownerName = null;
+                            //mu.ownerName = null;
                             _context.Map.Update(mu);
                         }
                     }
                 }
                 _context.SaveChanges();
             }
-            else if (_context.State.First().GameState == "Updated" && _context.PP_ID.ToList().Count() == Constants.playerCount)
+
+            else if (_context.State.First().StateGame == "Updated" && _context.PP_ID.ToList().Count() == Constants.playerCount)
             {
                 return _context.State.First();
                 //return "Updated";
@@ -142,10 +152,12 @@ namespace GameServer.Controllers
                 //return "Updating";
             }
 
+            //return _context.State.First();
+
             if (_context.PP_ID.ToList().Count() == Constants.playerCount)
             {
                 _context.PG_ID.RemoveRange(_context.PG_ID);
-                List<Unit> temp = new List<Unit>();
+                List<Unit> area = new List<Unit>();
                 List<Unit> unitmap = new List<Unit>();
 
                 foreach (MapUnit mu in _context.Map.ToList())
@@ -162,14 +174,21 @@ namespace GameServer.Controllers
                     {
                         if (Map.GetInstance.GetUnit(x, y).GetSymbol() != '0' && Map.GetInstance.GetUnit(x, y).GetSymbol() != '*')
                         {
-                            if (x - 1 < 0)
+                            if(x - 1 < 0 && y - 1 < 0 ||
+                                x + 1 >= Map.GetInstance.GetXSize() && y - 1 < 0 ||
+                                x - 1 < 0 && y + 1 >= Map.GetInstance.GetYSize() ||
+                                x + 1 >= Map.GetInstance.GetXSize() && y + 1 >= Map.GetInstance.GetYSize())
+                            {
+
+                            }
+                            else if (x - 1 < 0)
                             {
                                 foreach ((int, int) t in Constants.cordsMinusX)
                                 {
                                     u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
                                     if (u.symbol == '0' || u.symbol == '*')
                                     {
-                                        temp.Add(u);
+                                        area.Add(u);
                                     }
                                 }
                             }
@@ -180,7 +199,7 @@ namespace GameServer.Controllers
                                     u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
                                     if (u.symbol == '0' || u.symbol == '*')
                                     {
-                                        temp.Add(u);
+                                        area.Add(u);
                                     }
                                 }
                             }
@@ -191,7 +210,7 @@ namespace GameServer.Controllers
                                     u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
                                     if (u.symbol == '0' || u.symbol == '*')
                                     {
-                                        temp.Add(u);
+                                        area.Add(u);
                                     }
                                 }
                             }
@@ -202,7 +221,7 @@ namespace GameServer.Controllers
                                     u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
                                     if (u.symbol == '0' || u.symbol == '*')
                                     {
-                                        temp.Add(u);
+                                        area.Add(u);
                                     }
                                 }
                             }
@@ -213,23 +232,46 @@ namespace GameServer.Controllers
                                     u = Map.GetInstance.GetUnit(x + t.Item1, y + t.Item2);
                                     if (u.symbol == '0' || u.symbol == '*')
                                     {
-                                        temp.Add(u);
+                                        area.Add(u);
                                     }
                                 }
                             }
-                            gs.Notify(Map.GetInstance, (x, y), temp);
 
-                            //Update player
-
-
-                            temp.Clear();
+                            if (area.FirstOrDefault() != null)
+                            {
+                                gs.Notify(Map.GetInstance, (x, y), area);
+                                u = Map.GetInstance.GetUnit(x, y);
+                                if (u != null && u.color != (ConsoleColor)15)
+                                {
+                                    //Update player
+                                    Models.Player p = _context.Players.Where(player => player.color == u.color).FirstOrDefault();
+                                    if (p != null && u.owner != null)
+                                    {
+                                        if (u.owner.NumberOfActions != 0)
+                                            p.NumberOfActions += u.owner.NumberOfActions;
+                                        if (u.owner.MoneyMultiplier != 0)
+                                            p.MoneyMultiplier += u.owner.MoneyMultiplier;
+                                        //if (u.GetSymbol() == 'L')
+                                        //_context.State.First().Winner = u.GetColor();
+                                        //_context.SaveChanges();
+                                        _context.Players.Update(p);
+                                        _context.SaveChanges();
+                                    }
+                                    if (u.GetSymbol() == 'L')
+                                    {
+                                        _context.State.First().Winner = u.color;
+                                        _context.SaveChanges();
+                                    }
+                                }
+                            }
+                            area.Clear();
                         }
                     }
                 }
 
                 mp = _context.Map.ToList();
                 List<Unit> ul = Map.GetInstance.ConvertArrayToList();
-                for (int x=0; x<mp.Count; x++)
+                for (int x = 0; x < mp.Count; x++)
                 {
                     mp[x].color = ul[x].color;
                     mp[x].symbol = ul[x].symbol;
@@ -237,7 +279,7 @@ namespace GameServer.Controllers
                 }
 
                 State s = _context.State.First();
-                s.GameState = "Updated";
+                s.StateGame = "Updated";
                 _context.SaveChanges();
 
                 return _context.State.First();

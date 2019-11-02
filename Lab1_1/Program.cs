@@ -1,7 +1,9 @@
 ﻿using Lab1_1.AbstractFactory;
 using Lab1_1.Streategy;
+using Lab1_1.Observer;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -26,17 +28,8 @@ namespace Lab1_1
         static async Task Main(string[] args)
         {
             int turnLimit = 4;
-            /*
-            int[][] map = new int[10][];
-            for (int i = 0; i < 10; i++)
-            {
-                map[i] = new int[10];
-                for (int j = 0; j < 10; j++)
-                {
-                    map[i][j] = 0;
-                }
-            }*/
 
+            GameState gs = new GameState();
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 
@@ -55,15 +48,11 @@ namespace Lab1_1
             int ySize = int.Parse(Console.ReadLine());
             Map.GetInstance.GenerateGrid(xSize, ySize);
 
-            //--------
-            /* Player player = new Player();
-             Map.GetInstance.GetUnit(0, 0).TakeUnit(player);*/
-
             //----
 
-            //List<Unit> mappp = await GetMap(1);
-            //Console.WriteLine(mappp.Count);
-            //Map.GetInstance.ConvertListToArray(mappp);
+            //For multi
+            List<Unit> serverMap = await GetMap(1);
+            Map.GetInstance.ConvertListToArray(serverMap);
 
             for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
             {
@@ -82,14 +71,16 @@ namespace Lab1_1
             Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
             command = Console.ReadLine();
 
-            //player.Name = command;
-            //await CreatePlayerAsync(player);
-            //ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
-            //while (playersInLobby.Count < maxLobbyPlayers)
-            //{
-            //    //Console.WriteLine("Waiting for other players");
-            //    playersInLobby = GetAllPlayersAsync(client.BaseAddress.PathAndQuery).GetAwaiter().GetResult();
-            //}
+            //For multi
+            var url = await CreatePlayerAsync(player);
+            ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            while (playersInLobby.Count < maxLobbyPlayers)
+            {
+                playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            }
+            Player p = await GetPlayerAsync(url.PathAndQuery);
+            //string json = JsonConvert.SerializeObject(p, Formatting.Indented);
+            //Console.WriteLine(json);
 
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
@@ -116,8 +107,21 @@ namespace Lab1_1
             player.setAlgorithm(tower);
 
             int n = 0;
-            map1.GetUnit(0, 0).TakeUnit(player);
 
+            //For multi 
+            player.id = p.id;
+            player.currentX = p.currentX;
+            player.currentY = p.currentY;
+            player.color = p.color;
+            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            await UpdatePlayerAsync(player);
+            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            map1.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            player.currentX = player.currentX;
+            player.currentY = player.currentY;
+
+            //Sitas tris eilutes uzkomentuot jei multi
+            map1.GetUnit(0, 0).TakeUnit(player);
             player.currentX = 0;
             player.currentY = 0;
             while (turnLimit > 0)
@@ -292,6 +296,20 @@ namespace Lab1_1
                 if (player.getAlgorithm() is Tower)
                     ((Tower)player.getAlgorithm()).ResetStartingList();
 
+                //For multi
+                gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
+                while (gs.StateGame == "Updating")
+                {
+                    gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
+                }
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                serverMap = await GetMap(player.id);
+                Map.GetInstance.ConvertListToArray(serverMap);
+                p = await GetPlayerAsync(url.PathAndQuery);
+                player.MoneyMultiplier = p.MoneyMultiplier;
+                player.NumberOfActions = p.NumberOfActions;
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+
                 turnLimit--;
                
             }
@@ -358,8 +376,18 @@ namespace Lab1_1
             }
             return players;
         }
+        static async Task<Player> GetPlayerAsync(string path)
+        {
+            Player player = null;
+            HttpResponseMessage response = await client.GetAsync(path);
+            if (response.IsSuccessStatusCode)
+            {
+                player = await response.Content.ReadAsAsync<Player>();
+            }
+            return player;
+        }
 
-        static async Task<List<Unit>> GetMap( int id)
+        static async Task<List<Unit>> GetMap(long id)
         {
             List<Unit> map = null;
             HttpResponseMessage response = await client.GetAsync(gmRequestUri + $"{id}");
@@ -368,6 +396,28 @@ namespace Lab1_1
                 map = await response.Content.ReadAsAsync<List<Unit>>();
             }
             return map;
+        }
+
+        static async Task<HttpStatusCode> UpdatePlayerAsync(Player player)
+        {
+            Console.WriteLine(client + requestUri + $"{player.id}");
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                requestUri + $"{player.id}", player);
+            response.EnsureSuccessStatusCode();
+
+            //return response.StatusCode;
+            return response.StatusCode;
+        }
+
+        static async Task<GameState> UpdateMap(long id, List<Unit> map)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                gmRequestUri + $"{id}", map);
+            response.EnsureSuccessStatusCode();
+
+            GameState gs = await response.Content.ReadAsAsync<GameState>();
+
+            return gs;
         }
     }
 }

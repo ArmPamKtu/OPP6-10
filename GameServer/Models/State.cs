@@ -8,8 +8,8 @@ namespace GameServer.Models
     public class State
     {
         public long id { get; set; }
-        public string GameState { get; set; }
-        public string Winner { get; set; }
+        public string StateGame { get; set; }
+        public ConsoleColor Winner { get; set; }
 
         public State() { }
     }

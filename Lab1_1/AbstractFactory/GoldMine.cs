@@ -22,7 +22,10 @@ namespace Lab1_1.AbstractFactory
 
             if (map.GetUnit(cords.Item1, cords.Item2).GetSymbol() == this.symbol)
                 if (area.TrueForAll(item => item.color == area[0].color))
+                {
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
+                    map.GetUnit(cords.Item1, cords.Item2).owner = new Player { MoneyMultiplier = 1};
+                }
         }
     }
 }
