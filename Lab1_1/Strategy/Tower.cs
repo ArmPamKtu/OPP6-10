@@ -39,17 +39,13 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentY >= 0 && Map.GetInstance.GetUnit(player.currentX, player.currentY - 1).symbol.Equals('0'))
+                            if (player.currentY >= 0 && player.currentY - 1 >= 0 && Map.GetInstance.GetUnit(player.currentX, player.currentY - 1).symbol.Equals('0'))
                                 player.currentY--;
                             else
                                 break;
 
                             n++;
                         }
-
-
-
-                        //player.currentY++;
                     }
                     else
                     {
@@ -89,17 +85,13 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentX <= map.GetXSize() && Map.GetInstance.GetUnit(player.currentX + 1, player.currentY).symbol.Equals('0'))
+                            if (player.currentX <= map.GetXSize() && player.currentX + 1 < map.GetXSize() && Map.GetInstance.GetUnit(player.currentX + 1, player.currentY).symbol.Equals('0'))
                                 player.currentX++;
                             else
                                 break;
 
                             n++;
                         }
-
-
-
-                        //player.currentX--;
                     }
                     else
                     {
@@ -139,18 +131,13 @@ namespace Lab1_1.Streategy
                             }
 
 
-                            if (player.currentY <= map.GetYSize() && Map.GetInstance.GetUnit(player.currentX, player.currentY + 1).symbol.Equals('0'))
+                            if (player.currentY <= map.GetYSize() && player.currentY + 1 < map.GetYSize() && Map.GetInstance.GetUnit(player.currentX, player.currentY + 1).symbol.Equals('0'))
                                 player.currentY++;
                             else
                                 break;
 
                             n++;
                         }
-
-
-
-
-                        //player.currentY--;
                     }
                     else
                     {
@@ -189,17 +176,13 @@ namespace Lab1_1.Streategy
                                 player.Money = player.Money - player.MoneyMultiplier;
                             }
 
-                            if (player.currentX >= 0 && Map.GetInstance.GetUnit(player.currentX - 1, player.currentY).symbol.Equals('0'))
+                            if (player.currentX >= 0 && player.currentX - 1 >= 0 &&  Map.GetInstance.GetUnit(player.currentX - 1, player.currentY).symbol.Equals('0'))
                                 player.currentX--;
                             else
                                 break;
 
                             n++;
                         }
-
-
-
-                        //player.currentX++;
                     }
                     else
                     {
