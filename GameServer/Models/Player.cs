@@ -11,9 +11,10 @@ namespace GameServer.Models
         public string Name { get; set; }
         public int Money { get; set; }
         public int NumberOfActions { get; set; }
-        public int PosX { get; set; }
-        public long PosY { get; set; }
-
+        public int MoneyMultiplier { get; set; }
+        public ConsoleColor color { get; set; }
+        public int currentX { get; set; }
+        public int currentY { get; set; }
         public Player()
         {
         }
