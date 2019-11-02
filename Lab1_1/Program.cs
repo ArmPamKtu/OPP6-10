@@ -152,47 +152,73 @@ namespace Lab1_1
                         {
                             while (succesfulMove)
                             {
-                                Console.WriteLine("Choose where to go next R,L,U,D?");
-                                command = Console.ReadLine();
 
-                                switch (command)
+                                if (!(player.getAlgorithm() is Teleport))
                                 {
-                                    case ("D"):
-                                        if (player.currentY + player.Power < Map.GetInstance.GetYSize())
-                                        {
-                                            player.ExecuteMove(command, player);
-                                            succesfulMove = false;
-                                        }
-                                        else
-                                            Console.WriteLine("You are at the edge of the map");
-                                        break;
-                                    case ("U"):
-                                        if (player.currentY - player.Power >= 0)
-                                        {
-                                            player.ExecuteMove(command, player);
-                                            succesfulMove = false;
-                                        }
-                                        else
-                                            Console.WriteLine("You are at the edge of the map");
-                                        break;
-                                    case ("R"):
-                                        if (player.currentX + player.Power < Map.GetInstance.GetXSize())
-                                        {
-                                            player.ExecuteMove(command, player);
-                                            succesfulMove = false;
-                                        }
-                                        else
-                                            Console.WriteLine("You are at the edge of the map");
-                                        break;
-                                    case ("L"):
-                                        if (player.currentX - player.Power >= 0)
-                                        {
-                                            player.ExecuteMove(command, player);
-                                            succesfulMove = false;
-                                        }
-                                        else
-                                            Console.WriteLine("You are at the edge of the map");
-                                        break;
+                                    Console.WriteLine("Choose where to go next R,L,U,D?");
+                                    command = Console.ReadLine();
+
+                                    switch (command)
+                                    {
+                                        case ("D"):
+                                            if (player.currentY + player.Power < Map.GetInstance.GetYSize() && Map.GetInstance.GetUnit(player.currentX, player.currentY + player.Power).symbol.Equals('0'))
+                                            {
+                                                player.ExecuteMove(command, player);
+                                                succesfulMove = false;
+                                            }
+                                            else
+                                                Console.WriteLine("You are at the edge of the map OR going into an obstacle");
+                                            break;
+                                        case ("U"):
+                                            if (player.currentY - player.Power >= 0 && Map.GetInstance.GetUnit(player.currentX, player.currentY - player.Power).symbol.Equals('0'))
+                                            {
+                                                player.ExecuteMove(command, player);
+                                                succesfulMove = false;
+                                            }
+                                            else
+                                                Console.WriteLine("You are at the edge of the map OR going into an obstacle");
+                                            break;
+                                        case ("R"):
+                                            if (player.currentX + player.Power < Map.GetInstance.GetXSize() && Map.GetInstance.GetUnit(player.currentX + player.Power, player.currentY).symbol.Equals('0'))
+                                            {
+                                                player.ExecuteMove(command, player);
+                                                succesfulMove = false;
+                                            }
+                                            else
+                                                Console.WriteLine("You are at the edge of the map OR going into an obstacle");
+                                            break;
+                                        case ("L"):
+                                            if (player.currentX - player.Power >= 0 && Map.GetInstance.GetUnit(player.currentX - player.Power, player.currentY).symbol.Equals('0'))
+                                            {
+                                                player.ExecuteMove(command, player);
+                                                succesfulMove = false;
+                                            }
+                                            else
+                                                Console.WriteLine("You are at the edge of the map OR going into an obstacle");
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Choose where to go next, type in two numbers with a space between them");
+                                    command = Console.ReadLine();
+
+                                    string[] numbers = command.Split(' ');
+                                    int XPosition = 0;
+                                    int YPosition = 0;
+                                    
+                                    bool number1Success = Int32.TryParse(numbers[0], out XPosition);
+                                    bool number2Success = Int32.TryParse(numbers[1], out YPosition);
+
+                                    if(number1Success && number1Success && XPosition < 20 && YPosition < 20 && XPosition >= 0 && YPosition >= 0 && Map.GetInstance.GetUnit(XPosition, YPosition).symbol.Equals('0'))
+                                    {
+                                        player.ExecuteMove(command, player);
+                                        succesfulMove = false;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Your number where wrong or you are teleporting on an obstacle");
+                                    }
                                 }
                             }
                             succesfulMove = true;

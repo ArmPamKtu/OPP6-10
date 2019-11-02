@@ -19,8 +19,15 @@ namespace Lab1_1.Streategy
                 map.GetUnit(player.currentX, player.currentY).ResetOwner();
             }
 
-            player.currentX = Int32.Parse(command[0].ToString());
-            player.currentY = Int32.Parse(command[1].ToString());
+            string[] numbers = command.Split(' ');
+            int XPosition = 0;
+            int YPosition = 0;
+
+            bool number1Success = Int32.TryParse(numbers[0], out XPosition);
+            bool number2Success = Int32.TryParse(numbers[1], out YPosition);
+
+            player.currentX = XPosition;
+            player.currentY = YPosition;
 
             if (player.currentX > -1 && player.currentX < map.GetXSize() && player.currentY > -1 && player.currentY < map.GetYSize())
             {
