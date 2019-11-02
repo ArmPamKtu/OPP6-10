@@ -6,108 +6,198 @@ namespace Lab1_1.Streategy
 {
     public class Tower : Algorithm
     {
+        private List<int> StartingPositionsX = new List<int>();
+        private List<int> StartingPositionsY = new List<int>();
+
         public override void Action(Player player, string command, Map map, bool undo)
         {
+            if(undo == false)
+                AddStartingPosition(player.currentX, player.currentY);
+
             player.SetPreviousCoordinates(player.currentX, player.currentY);
             int n = 0;
+            
             switch (command)
             {
                 case "U":
-                    while (player.currentY >= 0)
+                    if (undo == false)
                     {
-
-                        player.Money = player.Money + player.MoneyMultiplier;
-
-                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-
-                        if(n != 0)
-                            map.GetUnit(player.currentX, player.currentY + 1).ResetSymbol();
-
-                        if (undo == true)
+                        while (player.currentY >= 0)
                         {
+
+                            player.Money = player.Money + player.MoneyMultiplier;
+
+                            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                            if (n != 0)
+                                map.GetUnit(player.currentX, player.currentY + 1).ResetSymbol();
+
+                            if (undo == true)
+                            {
+                                map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                                player.Money = player.Money - player.MoneyMultiplier;
+                            }
+
+                            if (player.currentY >= 0)
+                                player.currentY--;
+
+                            n++;
+                        }
+                        player.currentY++;
+                    }
+                    else
+                    {
+                        while (player.currentY >= StartingPositionsY[StartingPositionsY.Count - 1])
+                        {
+
                             map.GetUnit(player.currentX, player.currentY).ResetSymbol();
                             map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                            player.Money = player.Money - player.MoneyMultiplier;
+                           
+                            if (player.currentY >= StartingPositionsY[StartingPositionsY.Count - 1])
+                                player.currentY--;
+                      
                         }
-
-
-                        if (player.currentY >= 0)
-                            player.currentY--;
-
-                        n++;
+                        player.currentY++;
+                        StartingPositionsY.RemoveAt(StartingPositionsY.Count - 1);
+                        StartingPositionsX.RemoveAt(StartingPositionsX.Count - 1);
                     }
-                    player.currentY++;
                     break;
                 case "R":
-                    while (player.currentX < map.GetXSize())
+                    if (undo == false)
                     {
-                        player.Money = player.Money + player.MoneyMultiplier;
-
-                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-
-                        if (n != 0)
-                            map.GetUnit(player.currentX - 1, player.currentY).ResetSymbol();
-
-
-                        if (undo == true)
+                        while (player.currentX < map.GetXSize())
                         {
+                            player.Money = player.Money + player.MoneyMultiplier;
+
+                            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                            if (n != 0)
+                                map.GetUnit(player.currentX - 1, player.currentY).ResetSymbol();
+
+
+                            if (undo == true)
+                            {
+                                map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                                player.Money = player.Money - player.MoneyMultiplier;
+                            }
+
+                            if (player.currentX <= map.GetXSize())
+                                player.currentX++;
+
+
+                            n++;
+                        }
+                        player.currentX--;
+                    }
+                    else
+                    {
+                        while (player.currentX <= StartingPositionsX[StartingPositionsX.Count - 1])
+                        {
+
                             map.GetUnit(player.currentX, player.currentY).ResetSymbol();
                             map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                            player.Money = player.Money - player.MoneyMultiplier;
+
+                            if (player.currentX <= StartingPositionsX[StartingPositionsX.Count - 1])
+                                player.currentX++;
+
                         }
-
-                        if (player.currentX <= map.GetXSize())
-                            player.currentX++;
-
-
-                        n++;
+                        player.currentX--;
+                        StartingPositionsX.RemoveAt(StartingPositionsX.Count - 1);
+                        StartingPositionsY.RemoveAt(StartingPositionsY.Count - 1);
                     }
-                    player.currentX--;
                     break;
                 case "D":
-                    while (player.currentY < map.GetYSize())
+                    if (undo == false)
                     {
-                        player.Money = player.Money + player.MoneyMultiplier;
-                        
-                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-
-                        if (n != 0)
-                            map.GetUnit(player.currentX, player.currentY - 1).ResetSymbol();
-
-                        if (undo == true)
+                        while (player.currentY < map.GetYSize())
                         {
+                            player.Money = player.Money + player.MoneyMultiplier;
+
+                            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                            if (n != 0)
+                                map.GetUnit(player.currentX, player.currentY - 1).ResetSymbol();
+
+                            if (undo == true)
+                            {
+                                map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                                player.Money = player.Money - player.MoneyMultiplier;
+                            }
+
+
+                            if (player.currentY <= map.GetYSize())
+                                player.currentY++;
+
+                            n++;
+                        }
+                        player.currentY--;
+                    }
+                    else
+                    {
+                        while (player.currentY <= StartingPositionsY[StartingPositionsY.Count - 1])
+                        {
+
                             map.GetUnit(player.currentX, player.currentY).ResetSymbol();
                             map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                            player.Money = player.Money - player.MoneyMultiplier;
+
+                            if (player.currentY <= StartingPositionsY[StartingPositionsY.Count - 1])
+                                player.currentY++;
+
                         }
-
-
-                        if (player.currentY <= map.GetYSize())
-                            player.currentY++;
-
-                        n++;
+                        player.currentY--;
+                        StartingPositionsY.RemoveAt(StartingPositionsY.Count - 1);
+                        StartingPositionsX.RemoveAt(StartingPositionsX.Count - 1);
                     }
-                    player.currentY--;
                     break;
                 case "L":
-                    while (player.currentX >= 0)
+                    if (undo == false)
                     {
-                        player.Money = player.Money + player.MoneyMultiplier;
-                        
-                        map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-
-                        if (n != 0)
-                            map.GetUnit(player.currentX + 1, player.currentY).ResetSymbol();
-
-                        if (undo == true)
+                        while (player.currentX >= 0)
                         {
+                            player.Money = player.Money + player.MoneyMultiplier;
+
+                            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+
+                            if (n != 0)
+                                map.GetUnit(player.currentX + 1, player.currentY).ResetSymbol();
+
+                            if (undo == true)
+                            {
+                                map.GetUnit(player.currentX, player.currentY).ResetSymbol();
+                                map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                                player.Money = player.Money - player.MoneyMultiplier;
+                            }
+
+                            if (player.currentX >= 0)
+                                player.currentX--;
+
+                            n++;
+                        }
+                        player.currentX++;
+                    }
+                    else
+                    {
+                        while (player.currentX >= StartingPositionsX[StartingPositionsX.Count - 1])
+                        {
+
                             map.GetUnit(player.currentX, player.currentY).ResetSymbol();
                             map.GetUnit(player.currentX, player.currentY).ResetOwner();
+                            player.Money = player.Money - player.MoneyMultiplier;
+
+                            if (player.currentX >= StartingPositionsX[StartingPositionsX.Count - 1])
+                                player.currentX--;
+
                         }
-
-                        if (player.currentX >= 0)
-                            player.currentX--;
-
-                        n++;
+                        player.currentX++;
+                        StartingPositionsX.RemoveAt(StartingPositionsX.Count - 1);
+                        StartingPositionsY.RemoveAt(StartingPositionsY.Count - 1);
                     }
-                    player.currentX++;
                     break;
                 default:
                     map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
@@ -115,6 +205,17 @@ namespace Lab1_1.Streategy
                     player.currentY = 0;
                     break;
             }
+        }
+        public void AddStartingPosition(int x, int y)
+        {
+            StartingPositionsX.Add(x);
+            StartingPositionsY.Add(y);
+        }
+
+        public void ResetStartingList()
+        {
+            StartingPositionsX.Clear();
+            StartingPositionsY.Clear();
         }
     }
 }

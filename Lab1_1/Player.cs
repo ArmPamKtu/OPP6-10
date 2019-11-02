@@ -97,14 +97,17 @@ namespace Lab1_1
                 }
             }
 
-            if(getAlgorithm() is Teleport)
+            if (getAlgorithm() is Teleport)
             {
                 Map.GetInstance.GetUnit(((Teleport)getAlgorithm()).GetStartingX(), ((Teleport)getAlgorithm()).GetStartingX()).symbol = symbol;
                 currentX = ((Teleport)getAlgorithm()).GetStartingX();
                 currentY = ((Teleport)getAlgorithm()).GetStartingX();
             }
             else
+            {
                 Map.GetInstance.GetUnit(currentX, currentY).symbol = symbol;
+                Map.GetInstance.GetUnit(currentX, currentY).color = color;
+            }
 
         }
         public void ExecuteMove(string commandDirection, Player player)

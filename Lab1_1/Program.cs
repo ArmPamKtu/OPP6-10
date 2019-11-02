@@ -113,7 +113,7 @@ namespace Lab1_1
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(teleport);
+            player.setAlgorithm(tower);
 
             int n = 0;
             map1.GetUnit(0, 0).TakeUnit(player);
@@ -143,13 +143,60 @@ namespace Lab1_1
                     Console.ResetColor();
 
                     Console.WriteLine("___________");
-
+                    bool succesfulMove = true;
                     if (n != player.NumberOfActions)
                     {
-                        Console.WriteLine("Choose where to go next R,L,U,D?");
-                        command = Console.ReadLine();
-                        player.ExecuteMove(command, player);
-                      //  player.move(player, command, Map.GetInstance);
+                        while (succesfulMove)
+                        {
+                            Console.WriteLine("Choose where to go next R,L,U,D?");
+                            command = Console.ReadLine();
+
+                            switch (command)
+                            {
+                                case ("D"):
+                                    if (player.currentY + player.Power < Map.GetInstance.GetYSize())
+                                    {
+                                        player.ExecuteMove(command, player);
+                                        succesfulMove = false;
+                                    }
+                                    else
+                                        Console.WriteLine("You are at the edge of the map");
+                                    break;
+                                case ("U"):
+                                    if (player.currentY - player.Power >= 0)
+                                    {
+                                        player.ExecuteMove(command, player);
+                                        succesfulMove = false;
+                                    }
+                                    else
+                                        Console.WriteLine("You are at the edge of the map");
+                                    break;
+                                case ("R"):
+                                    if (player.currentX + player.Power < Map.GetInstance.GetXSize())
+                                    {
+                                        player.ExecuteMove(command, player);
+                                        succesfulMove = false;
+                                    }
+                                    else
+                                        Console.WriteLine("You are at the edge of the map");
+                                    break;
+                                case ("L"):
+                                    if (player.currentX - player.Power >= 0)
+                                    {
+                                        player.ExecuteMove(command, player);
+                                        succesfulMove = false;
+                                    }
+                                    else
+                                        Console.WriteLine("You are at the edge of the map");
+                                    break;
+                                    
+
+                            }
+                           // player.ExecuteMove(command, player);
+                        }
+
+                        succesfulMove = true;
+                        //  player.move(player, command, Map.GetInstance);
                     }
 
                 }
@@ -212,6 +259,8 @@ namespace Lab1_1
 
                 }
 
+                if (player.getAlgorithm() is Tower)
+                    ((Tower)player.getAlgorithm()).ResetStartingList();
 
                 turnLimit--;
                 n = 0;
