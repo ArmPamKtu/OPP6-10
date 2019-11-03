@@ -35,7 +35,7 @@ namespace Lab1_1
 
             client = new HttpClient(clientHandler);
 
-            client.BaseAddress = new Uri("https://localhost:44394/"); //api /player/");
+            client.BaseAddress = new Uri("https://localhost:44397/"); //api /player/");
             client.DefaultRequestHeaders.Accept.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(
@@ -51,8 +51,8 @@ namespace Lab1_1
             //----
 
             //For multi
-            List<Unit> serverMap = await GetMap(1);
-            Map.GetInstance.ConvertListToArray(serverMap);
+            //List<Unit> serverMap = await GetMap(1);
+            //Map.GetInstance.ConvertListToArray(serverMap);
 
             for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
             {
@@ -72,15 +72,16 @@ namespace Lab1_1
             command = Console.ReadLine();
 
             //For multi
-            var url = await CreatePlayerAsync(player);
-            ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
-            while (playersInLobby.Count < maxLobbyPlayers)
-            {
-                playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
-            }
-            Player p = await GetPlayerAsync(url.PathAndQuery);
-            //string json = JsonConvert.SerializeObject(p, Formatting.Indented);
-            //Console.WriteLine(json);
+            //player.Name = command;
+            //var url = await CreatePlayerAsync(player);
+            //ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            //while (playersInLobby.Count < maxLobbyPlayers)
+            //{
+            //    playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
+            //}
+            //Player p = await GetPlayerAsync(url.PathAndQuery);
+            ////string json = JsonConvert.SerializeObject(p, Formatting.Indented);
+            ////Console.WriteLine(json);
 
             Map map1 = Map.GetInstance;
             Map map2 = Map.GetInstance;
@@ -97,28 +98,27 @@ namespace Lab1_1
             Console.WriteLine("Wolfs - they get an extra action each turn");
             Console.WriteLine("Hunter - they start with extra money");
             Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
-
             command = Console.ReadLine();
 
             factory = new FactionFactory();
            
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
-            player.setAlgorithm(tower);
+            player.setAlgorithm(standart);
 
             int n = 0;
 
             //For multi 
-            player.id = p.id;
-            player.currentX = p.currentX;
-            player.currentY = p.currentY;
-            player.color = p.color;
-            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-            await UpdatePlayerAsync(player);
-            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-            map1.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-            player.currentX = player.currentX;
-            player.currentY = player.currentY;
+            //player.id = p.id;
+            //player.currentX = p.currentX;
+            //player.currentY = p.currentY;
+            //player.color = p.color;
+            ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            //await UpdatePlayerAsync(player);
+            ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            //map1.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+            //player.currentX = player.currentX;
+            //player.currentY = player.currentY;
 
             //Sitas tris eilutes uzkomentuot jei multi
             map1.GetUnit(0, 0).TakeUnit(player);
@@ -297,18 +297,18 @@ namespace Lab1_1
                     ((Tower)player.getAlgorithm()).ResetStartingList();
 
                 //For multi
-                gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
-                while (gs.StateGame == "Updating")
-                {
-                    gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
-                }
-                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-                serverMap = await GetMap(player.id);
-                Map.GetInstance.ConvertListToArray(serverMap);
-                p = await GetPlayerAsync(url.PathAndQuery);
-                player.MoneyMultiplier = p.MoneyMultiplier;
-                player.NumberOfActions = p.NumberOfActions;
-                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                //gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
+                //while (gs.StateGame == "Updating")
+                //{
+                //    gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
+                //}
+                ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                //serverMap = await GetMap(player.id);
+                //Map.GetInstance.ConvertListToArray(serverMap);
+                //p = await GetPlayerAsync(url.PathAndQuery);
+                //player.MoneyMultiplier = p.MoneyMultiplier;
+                //player.NumberOfActions = p.NumberOfActions;
+                ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
 
                 turnLimit--;
                
