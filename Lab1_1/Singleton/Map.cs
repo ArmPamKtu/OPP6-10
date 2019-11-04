@@ -54,8 +54,8 @@ namespace Lab1_1
             wonderPrototype = (Wonder)mapFactory.CreateSuperObstacle("Wonder", 0, 0);
             stonePrototype = (Stone)mapFactory.CreateObstacle("Stone", 0, 0);
             //----------Testavimui
-            stonePrototype.TakeUnit(new Player());
-            goldMinePrototype.TakeUnit(new Player());
+            //stonePrototype.TakeUnit(new Player());
+            //goldMinePrototype.TakeUnit(new Player());
             //----------
             Grid = new Unit[ySize][];
             for (int y = 0; y < ySize; y++)
@@ -69,7 +69,7 @@ namespace Lab1_1
                         Grid[y][x] = (Unit)wonderPrototype.ShallowCopy();
                         Grid[y][x].SetCoordinates(x, y);
                         //----------Testavimui
-                        Console.WriteLine("Wonder original address " + wonderPrototype.GetHashCode() + " Wonder copy address " + Grid[y][x].GetHashCode());
+                        //Console.WriteLine("Wonder original address " + wonderPrototype.GetHashCode() + " Wonder copy address " + Grid[y][x].GetHashCode());
                         //----------
                     }
                     else if (obstacleValue > CGoldMineThreshold && !IsInOuterZone(x, y) && !isNearbyObstacle(x, y))
@@ -77,17 +77,20 @@ namespace Lab1_1
                         Grid[y][x] = (Unit)goldMinePrototype.ShallowCopy();
                         Grid[y][x].SetCoordinates(x, y);
                         //----------Testavimui
-                        Console.WriteLine("Gold Mine original address " + goldMinePrototype.GetHashCode() + " Gold Mine copy address " + Grid[y][x].GetHashCode());
-                        Console.WriteLine("Gold Mine Player original address " + goldMinePrototype.GetPlayer().GetHashCode() + " Gold Mine Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
+                        //Console.WriteLine("Gold Mine original address " + goldMinePrototype.GetHashCode() + " Gold Mine copy address " + Grid[y][x].GetHashCode());
+                        //Console.WriteLine("Gold Mine Player original address " + goldMinePrototype.GetPlayer().GetHashCode() + " Gold Mine Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
                         //----------
                     }
                     else if (obstacleValue > CStoneThreshold && !IsInOuterZone(x, y) && !isNearbyObstacle(x, y))
                     {
-                        Grid[y][x] = (Unit)stonePrototype.DeepCopy();
+                        //----------Testavimui
+                        //Grid[y][x] = (Unit)stonePrototype.DeepCopy();
+                        //----------
+                        Grid[y][x] = (Unit)stonePrototype.ShallowCopy();
                         Grid[y][x].SetCoordinates(x, y);
                         //----------Testavimui
-                        Console.WriteLine("Stone original address " + stonePrototype.GetHashCode() + " Stone copy address " + Grid[y][x].GetHashCode());
-                        Console.WriteLine("Stone Player original address " + stonePrototype.GetPlayer().GetHashCode() + " Stone Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
+                        //Console.WriteLine("Stone original address " + stonePrototype.GetHashCode() + " Stone copy address " + Grid[y][x].GetHashCode());
+                        //Console.WriteLine("Stone Player original address " + stonePrototype.GetPlayer().GetHashCode() + " Stone Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
                         //----------
                     }
                     else
