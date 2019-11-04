@@ -15,22 +15,15 @@ namespace Lab1_1
 {
     class Program
     {
-        private static Factory factory;
-        private static Player player = new Player();
-        private static Map map;
-        private static ObstacleAbstractFactory shopFactory;
-        private static ObstacleAbstractFactory mapFactory;
-
         private static string requestUri = "/api/player/";
         private static string gmRequestUri = "/api/gamecontroller/";
         static string mediaType = "application/json";
 
         public static HttpClient client = new HttpClient();
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             int turnLimit = 4;
 
-            GameState gs = new GameState();
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 
@@ -49,29 +42,18 @@ namespace Lab1_1
             int xSize = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter map's size on Y axis");
             int ySize = int.Parse(Console.ReadLine());
-            Map.GetInstance.GenerateGrid(xSize, ySize);
-
-            //----
+            //-----
+            Map.GetInstance.GenerateGrid(xSize, ySize);         //Čia turėtų būti gameManager.GenerateGrid(xSize, ySize);
+            //-----
 
             //For multi
             //List<Unit> serverMap = await GetMap(1);
             //Map.GetInstance.ConvertListToArray(serverMap);
 
-            for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
-            {
-                for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
-                {
-                    Console.ForegroundColor =Map.GetInstance.GetUnit(x, y).GetColor();
-                    Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
-                }
-                Console.WriteLine();
-            }
-            Console.ResetColor();
-         
 
             string command = "";
             Console.WriteLine("Welcome to splash Wars!");
-            Console.WriteLine("Enter player's name to start looking for a loby( you will be added to a lobby automatically)");
+            Console.WriteLine("Enter player's name to start looking for a loby (you will be added to a lobby automatically)");
             command = Console.ReadLine();
 
             //     For multi
@@ -85,14 +67,13 @@ namespace Lab1_1
             string json = JsonConvert.SerializeObject(gameManager.player, Formatting.Indented);
             Console.WriteLine(json);
 
-            Map map1 = Map.GetInstance;
-            Map map2 = Map.GetInstance;
-
-          //  AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+            //-----
+            //Šitie kintamieji turėtų būti perkelti į GameManager
             Algorithm standart = gameManager.algorithmFactory.GetDefault("Standart");
             Algorithm hopper = gameManager.algorithmFactory.GetDefault("Hopper");
             Algorithm tower = gameManager.algorithmFactory.GetDefault("Tower");
             Algorithm teleport = gameManager.algorithmFactory.GetDefault("Teleport");
+            //-----
 
 
             Console.WriteLine("choose your faction:");
@@ -100,8 +81,6 @@ namespace Lab1_1
             Console.WriteLine("Hunter - they start with extra money");
             Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
             command = Console.ReadLine();
-
-            //   factory = new FactionFactory();
 
             gameManager.CreatePlayerWithFaction(command, standart);
 
@@ -120,9 +99,10 @@ namespace Lab1_1
             //player.currentY = player.currentY;
 
             //Sitas tris eilutes uzkomentuot jei multi
-            map1.GetUnit(0, 0).TakeUnit(gameManager.player);
+            Map.GetInstance.GetUnit(0, 0).TakeUnit(gameManager.player);
             gameManager.player.currentX = 0;
             gameManager.player.currentY = 0;
+
             while (turnLimit > 0)
             {
                 ((Teleport)teleport).SetStartingPosition(gameManager.player.currentX, gameManager.player.currentY);
@@ -225,7 +205,7 @@ namespace Lab1_1
                         Console.WriteLine("As a Wolf you can attack an area and capture it");
                         Console.WriteLine("If you want to attack, type a direction: R,L,U,D");
                         command = Console.ReadLine();
-                        ((Wolf)gameManager.player).AttackASpecificArea(player, command, Map.GetInstance);
+                        ((Wolf)gameManager.player).AttackASpecificArea(gameManager.player, command, Map.GetInstance);
 
                     }
                 }
@@ -234,8 +214,8 @@ namespace Lab1_1
 
                 }
 
-                if (player.getAlgorithm() is Tower)
-                    ((Tower)player.getAlgorithm()).ResetStartingList();
+                if (gameManager.player.getAlgorithm() is Tower)
+                    ((Tower)gameManager.player.getAlgorithm()).ResetStartingList();
 
                 //For multi
                 //gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
@@ -252,20 +232,6 @@ namespace Lab1_1
                 ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
 
                 turnLimit--;
-               
-            }
-           // shopFactory = new ShopFactory();
-           // mapFactory = new MapFactory();
-
-            while (!command.Equals("Stop"))
-            {
-                Console.WriteLine("Create an obstacle:");
-                Console.WriteLine("Stone; Tree; GoldMine; ActionTower; Wonder");
-
-                command = Console.ReadLine();
-
-                gameManager.CreateAnObstacle(command);
-
             }
         }
 
