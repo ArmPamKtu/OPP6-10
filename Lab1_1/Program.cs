@@ -65,7 +65,7 @@ namespace Lab1_1
             //Player p = await gameManager.GetPlayer(url.PathAndQuery);
 
             string json = JsonConvert.SerializeObject(gameManager.player, Formatting.Indented);
-            Console.WriteLine(json);
+            //Console.WriteLine(json);
 
             //-----
             //Šitie kintamieji turėtų būti perkelti į GameManager
