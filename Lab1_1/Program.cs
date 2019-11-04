@@ -42,9 +42,8 @@ namespace Lab1_1
             int xSize = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter map's size on Y axis");
             int ySize = int.Parse(Console.ReadLine());
-            //-----
-            Map.GetInstance.GenerateGrid(xSize, ySize);         //Čia turėtų būti gameManager.GenerateGrid(xSize, ySize);
-            //-----
+
+            gameManager.generateGrid(xSize, ySize);
 
             //For multi
             //List<Unit> serverMap = await GetMap(1);
@@ -66,14 +65,6 @@ namespace Lab1_1
 
             string json = JsonConvert.SerializeObject(gameManager.player, Formatting.Indented);
             //Console.WriteLine(json);
-
-            //-----
-            //Šitie kintamieji turėtų būti perkelti į GameManager
-            Algorithm standart = gameManager.algorithmFactory.GetDefault("Standart");
-            Algorithm hopper = gameManager.algorithmFactory.GetDefault("Hopper");
-            Algorithm tower = gameManager.algorithmFactory.GetDefault("Tower");
-            Algorithm teleport = gameManager.algorithmFactory.GetDefault("Teleport");
-            //-----
 
 
             Console.WriteLine("choose your faction:");
@@ -99,7 +90,7 @@ namespace Lab1_1
             //player.currentY = player.currentY;
 
             //Sitas tris eilutes uzkomentuot jei multi
-            Map.GetInstance.GetUnit(0, 0).TakeUnit(gameManager.player);
+            gameManager.TakeUnit();
             gameManager.player.currentX = 0;
             gameManager.player.currentY = 0;
 
@@ -117,12 +108,12 @@ namespace Lab1_1
                         Console.WriteLine("Map looks like:");
                         Console.WriteLine("___________");
 
-                        for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
+                        for (int y = 0; y < gameManager.GetYSize(); y++)
                         {
-                            for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
+                            for (int x = 0; x < gameManager.GetXSize(); x++)
                             {
-                                Console.ForegroundColor = Map.GetInstance.GetUnit(x, y).GetColor();
-                                Console.Write(Map.GetInstance.GetUnit(x, y).GetSymbol());
+                                Console.ForegroundColor = gameManager.GetColor(x, y);
+                                Console.Write(gameManager.GetSymbol());
                             }
                             Console.WriteLine();
                         }
@@ -149,7 +140,6 @@ namespace Lab1_1
                                     Console.WriteLine("Choose where to go next, type in two numbers with a space between them");
                                     command = Console.ReadLine();
 
-
                                     gameManager.MovePlayerNext(command, ref succesfulMove);
 
                                 }
@@ -165,7 +155,7 @@ namespace Lab1_1
                     gameManager.Undo(command, ref finishedIteration);
                     n = 0;
                 }
-            
+
 
                 Console.WriteLine("You have " + gameManager.player.Money + " Money");
                 Console.WriteLine("Do you want to move like:");

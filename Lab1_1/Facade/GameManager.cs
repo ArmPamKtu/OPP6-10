@@ -18,6 +18,11 @@ namespace Lab1_1.Facade
         public Player player;
         public FactionFactory factory;
 
+        public Algorithm standart;
+        public Algorithm hopper;
+        public Algorithm tower;
+        public Algorithm teleport;
+
         public HttpClient client { get; set; }
 
         public GameManager(HttpClient client)
@@ -27,6 +32,34 @@ namespace Lab1_1.Facade
             algorithmFactory = new AlgorithmFactory();
             player = new Player();
             factory = new FactionFactory();
+            standart = algorithmFactory.GetDefault("Standart");
+            hopper = algorithmFactory.GetDefault("Hopper");
+            tower = algorithmFactory.GetDefault("Tower");
+            teleport = algorithmFactory.GetDefault("Teleport");
+        }
+        public Unit[][] generateGrid(int xSize, int ySize)
+        {
+            Map.GetInstance.GenerateGrid(xSize, ySize);
+        }
+        public int GetYSize()
+        {
+            return Map.GetInstance.GetYSize();
+        }
+        public int GetXSize()
+        {
+            return Map.GetInstance.GetXSize();
+        }
+        public ConsoleColor getColor(int x, int y)
+        {
+            return Map.GetInstance.GetUnit(x, y).GetColor();
+        }
+        public char getSymbol(int x, int y)
+        {
+            return Map.GetInstance.GetUnit(x, y).GetSymbol();
+        }
+        public void takeUnit()
+        {
+            Map.GetInstance.GetUnit(0, 0).TakeUnit(player);
         }
         public void Undo(string command, ref bool finishedIteration)
         {
