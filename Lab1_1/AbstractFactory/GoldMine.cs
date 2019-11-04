@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lab1_1.Prototype;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    public class GoldMine: SuperObstacle
+    public class GoldMine: SuperObstacle, IPrototype
     {
         public GoldMine(int x, int y) : base(x, y)
         {
@@ -26,6 +27,18 @@ namespace Lab1_1.AbstractFactory
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
                     map.GetUnit(cords.Item1, cords.Item2).owner = new Player { MoneyMultiplier = 1};
                 }
+        }
+
+        public IPrototype ShallowCopy()
+        {
+            return (GoldMine)this.MemberwiseClone();
+        }
+
+        public IPrototype DeepCopy()
+        {
+            GoldMine copy = (GoldMine)this.MemberwiseClone();
+            copy.owner = (Player)this.owner.Clone();
+            return copy;
         }
     }
 }

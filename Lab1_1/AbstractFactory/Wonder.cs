@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lab1_1.Prototype;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    public class Wonder: SuperObstacle
+    public class Wonder: SuperObstacle, IPrototype
     {
         public Wonder(int x, int y):base(x, y)
         {
@@ -24,6 +25,18 @@ namespace Lab1_1.AbstractFactory
                 {
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('L', area[0].color);
                 }
+        }
+
+        public IPrototype ShallowCopy()
+        {
+            return (Wonder)this.MemberwiseClone();
+        }
+
+        public IPrototype DeepCopy()
+        {
+            Wonder copy = (Wonder)this.MemberwiseClone();
+            copy.owner = (Player)this.owner.Clone();
+            return copy;
         }
     }
 }

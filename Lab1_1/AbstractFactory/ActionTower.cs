@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lab1_1.Prototype;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    public class ActionTower: SuperObstacle
+    public class ActionTower: SuperObstacle, IPrototype
     {
         public ActionTower(int x, int y) : base(x, y)
         {
@@ -27,6 +28,18 @@ namespace Lab1_1.AbstractFactory
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
                     map.GetUnit(cords.Item1, cords.Item2).owner = new Player { NumberOfActions = 1 };
                 }
+        }
+
+        public IPrototype ShallowCopy()
+        {
+            return (ActionTower)this.MemberwiseClone();
+        }
+
+        public IPrototype DeepCopy()
+        {
+            ActionTower copy = (ActionTower)this.MemberwiseClone();
+            copy.owner = (Player)this.owner.Clone();
+            return copy;
         }
     }
 }

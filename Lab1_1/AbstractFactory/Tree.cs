@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lab1_1.Prototype;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    public class Tree: Obstacle
+    public class Tree: Obstacle, IPrototype
     {
         public Tree(int x, int y) : base(x, y)
         {
@@ -22,6 +23,18 @@ namespace Lab1_1.AbstractFactory
             if(map.GetUnit(cords.Item1, cords.Item2).GetSymbol()==this.symbol)
                 if (area.TrueForAll(item => item.color == area[0].color))
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
+        }
+
+        public IPrototype ShallowCopy()
+        {
+            return (Tree)this.MemberwiseClone();
+        }
+
+        public IPrototype DeepCopy()
+        {
+            Tree copy = (Tree)this.MemberwiseClone();
+            copy.owner = (Player)this.owner.Clone();
+            return copy;
         }
     }
 }

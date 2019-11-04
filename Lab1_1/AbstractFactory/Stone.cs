@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lab1_1.Prototype;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.AbstractFactory
 {
-    class Stone: Obstacle
+    class Stone: Obstacle, IPrototype
     {
         public Stone(int x, int y) : base(x, y)
         {
@@ -19,6 +20,18 @@ namespace Lab1_1.AbstractFactory
         public override void Update(Map map, (int, int) cords, List<Unit> area)
         {
             //Nothing happens. A stone is a stone
+        }
+
+        public IPrototype ShallowCopy()
+        {
+            return (Stone)this.MemberwiseClone();
+        }
+
+        public IPrototype DeepCopy()
+        {
+            Stone copy = (Stone)this.MemberwiseClone();
+            copy.owner = (Player)this.owner.Clone();
+            return copy;
         }
     }
 }

@@ -62,5 +62,11 @@ namespace Lab1_1
         {
             return symbol;
         }
+
+        public void SetCoordinates(int x, int y)
+        {
+            coordinateX = x;
+            coordinateY = y;
+        }
     }
 }

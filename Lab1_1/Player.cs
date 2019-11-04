@@ -83,7 +83,6 @@ namespace Lab1_1
             return previousY;
         }
 
-
         public void Undo()
         {
             Console.WriteLine("Undoing your moves");
@@ -118,6 +117,11 @@ namespace Lab1_1
 
             _commands.Add(command);
             _curentMoveNumber++;
+        }
+
+        public Player Clone()
+        {
+            return (Player)this.MemberwiseClone();
         }
 
     }

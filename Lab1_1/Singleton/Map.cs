@@ -7,20 +7,21 @@ namespace Lab1_1
 {
     public class Map
     {
-        private const double CWonderThreshold = 0.98;
-        private const double CGoldMineThreshold = 0.85;
-        private const double CStoneThreshold = 0.7;
+        private const double CWonderThreshold = 0.99;
+        private const double CGoldMineThreshold = 0.93;
+        private const double CStoneThreshold = 0.85;
         private Unit[][] Grid { get; set; }
         private static int counter = 0;
         private static MapFactory mapFactory = new MapFactory();
         private static readonly object Instancelock = new object();
         private Random random = new Random();
+        private GoldMine goldMinePrototype;
+        private Wonder wonderPrototype;
+        private Stone stonePrototype;
 
         private Map()
         {
-            //GenerateGrid(xSize, ySize);
             counter++;
-            Console.WriteLine("Counter Value " + counter.ToString());
         }
         private static Map instance = null;
 
@@ -48,6 +49,13 @@ namespace Lab1_1
 
         public Unit[][] GenerateGrid(int xSize, int ySize)
         {
+            goldMinePrototype = (GoldMine)mapFactory.CreateSuperObstacle("Gold Mine", 0, 0);
+            wonderPrototype = (Wonder)mapFactory.CreateSuperObstacle("Wonder", 0, 0);
+            stonePrototype = (Stone)mapFactory.CreateObstacle("Stone", 0, 0);
+            //----------Testavimui
+            stonePrototype.TakeUnit(new Player());
+            goldMinePrototype.TakeUnit(new Player());
+            //----------
             Grid = new Unit[ySize][];
             for (int y = 0; y < ySize; y++)
             {
@@ -55,17 +63,57 @@ namespace Lab1_1
                 for (int x = 0; x < xSize; x++)
                 {
                     double obstacleValue = random.NextDouble();
-                    if (obstacleValue > CWonderThreshold)
-                        Grid[y][x] = mapFactory.CreateSuperObstacle("Wonder", x, y);
-                    else if (obstacleValue > CGoldMineThreshold)
-                        Grid[y][x] = mapFactory.CreateSuperObstacle("Gold Mine", x, y);
-                    else if (obstacleValue > CStoneThreshold)
-                        Grid[y][x] = mapFactory.CreateObstacle("Stone", x, y);
+                    if (obstacleValue > CWonderThreshold && !IsInOuterZone(x, y) && !isNearbyObstacle(x, y))
+                    {
+                        Grid[y][x] = (Unit)wonderPrototype.ShallowCopy();
+                        Grid[y][x].SetCoordinates(x, y);
+                        //----------Testavimui
+                        Console.WriteLine("Wonder original address " + wonderPrototype.GetHashCode() + " Wonder copy address " + Grid[y][x].GetHashCode());
+                        //----------
+                    }
+                    else if (obstacleValue > CGoldMineThreshold && !IsInOuterZone(x, y) && !isNearbyObstacle(x, y))
+                    {
+                        Grid[y][x] = (Unit)goldMinePrototype.ShallowCopy();
+                        Grid[y][x].SetCoordinates(x, y);
+                        //----------Testavimui
+                        Console.WriteLine("Gold Mine original address " + goldMinePrototype.GetHashCode() + " Gold Mine copy address " + Grid[y][x].GetHashCode());
+                        Console.WriteLine("Gold Mine Player original address " + goldMinePrototype.GetPlayer().GetHashCode() + " Gold Mine Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
+                        //----------
+                    }
+                    else if (obstacleValue > CStoneThreshold && !IsInOuterZone(x, y) && !isNearbyObstacle(x, y))
+                    {
+                        Grid[y][x] = (Unit)stonePrototype.DeepCopy();
+                        Grid[y][x].SetCoordinates(x, y);
+                        //----------Testavimui
+                        Console.WriteLine("Stone original address " + stonePrototype.GetHashCode() + " Stone copy address " + Grid[y][x].GetHashCode());
+                        Console.WriteLine("Stone Player original address " + stonePrototype.GetPlayer().GetHashCode() + " Stone Player copy address " + Grid[y][x].GetPlayer().GetHashCode());
+                        //----------
+                    }
                     else
                         Grid[y][x] = new Unit(x, y);
                 }
             }
             return Grid;
+        }
+
+        private bool IsInOuterZone(int x, int y)
+        {
+            return x == 0 || y == 0 || x == (GetXSize() - 1) || y == (GetYSize() - 1);
+        }
+
+        private bool isNearbyObstacle(int x, int y)
+        {
+            bool upperLeft = false, upper = false, upperRight = false, left = false;
+            if (y > 0 && x > 0)
+                upperLeft = Grid[y - 1][x - 1] is GoldMine || Grid[y - 1][x - 1] is Wonder || Grid[y - 1][x - 1] is Stone;
+            if (y > 0)
+                upper = Grid[y - 1][x] is GoldMine || Grid[y - 1][x] is Wonder || Grid[y - 1][x] is Stone;
+            if (y > 0 && x < GetXSize() - 1)
+                upperRight = Grid[y - 1][x + 1] is GoldMine || Grid[y - 1][x + 1] is Wonder || Grid[y - 1][x + 1] is Stone;
+            if (x > 0)
+                left = Grid[y][x - 1] is GoldMine || Grid[y][x - 1] is Wonder || Grid[y][x - 1] is Stone;
+            return upperLeft || upper || upperRight || left;
+
         }
 
         public List<Unit> ConvertArrayToList()
