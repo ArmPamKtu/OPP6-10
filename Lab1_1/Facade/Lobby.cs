@@ -9,7 +9,7 @@ namespace Lab1_1.Facade
     public class Lobby
     {
         private static HttpClient client = new HttpClient();
-        private static string requestUri = "/api/player/";
+        private static string requestUri = "https://localhost:44338/api/player/";
         public int maxLobbyPlayers { get; set; }
         public async Task<bool> LobbyIsFullAsync()
         {

@@ -1,4 +1,5 @@
 ﻿using Lab1_1.AbstractFactory;
+using Lab1_1.Observer;
 using Lab1_1.Streategy;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,15 @@ namespace Lab1_1.Facade
         }
         public Unit[][] generateGrid(int xSize, int ySize)
         {
-            Map.GetInstance.GenerateGrid(xSize, ySize);
+            return Map.GetInstance.GenerateGrid(xSize, ySize);
+        }
+        public Map GetMap()
+        {
+            return Map.GetInstance;
+        }
+        public GameState GetGameState()
+        {
+            return new GameState();
         }
         public int GetYSize()
         {
@@ -49,11 +58,11 @@ namespace Lab1_1.Facade
         {
             return Map.GetInstance.GetXSize();
         }
-        public ConsoleColor getColor(int x, int y)
+        public ConsoleColor GetColor(int x, int y)
         {
             return Map.GetInstance.GetUnit(x, y).GetColor();
         }
-        public char getSymbol(int x, int y)
+        public char GetSymbol(int x, int y)
         {
             return Map.GetInstance.GetUnit(x, y).GetSymbol();
         }
@@ -180,6 +189,12 @@ namespace Lab1_1.Facade
         public async Task<Player> GetPlayer(string path)
         {
             return await lobby.GetPlayerAsync(path);
+        }
+
+        public Lobby GetLobby()
+        {
+            return lobby;
+
         }
     }
 }

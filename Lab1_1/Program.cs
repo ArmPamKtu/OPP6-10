@@ -20,7 +20,7 @@ namespace Lab1_1
         static string mediaType = "application/json";
 
         public static HttpClient client = new HttpClient();
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             int turnLimit = 4;
 
@@ -29,13 +29,14 @@ namespace Lab1_1
 
             client = new HttpClient(clientHandler);
 
-            client.BaseAddress = new Uri("https://localhost:44397/"); //api /player/");
+            client.BaseAddress = new Uri("https://localhost:44338/"); //api /player/");
             client.DefaultRequestHeaders.Accept.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue(mediaType));
 
             GameManager gameManager = new GameManager(client);
+           
 
             Console.WriteLine("Welcome to splash Wars!");
             Console.WriteLine("Enter map's size on X axis");
@@ -46,8 +47,8 @@ namespace Lab1_1
             gameManager.generateGrid(xSize, ySize);
 
             //For multi
-            //List<Unit> serverMap = await GetMap(1);
-            //Map.GetInstance.ConvertListToArray(serverMap);
+            List<Unit> serverMap = await GetMap(1);
+            Map.GetInstance.ConvertListToArray(serverMap);
 
 
             string command = "";
@@ -56,12 +57,12 @@ namespace Lab1_1
             command = Console.ReadLine();
 
             //     For multi
-            //gameManager.player.SetName(command);
-            //var url = gameManager.CreatePlayer(player);
+            gameManager.player.SetName(command);
+            var url = gameManager.CreatePlayer(gameManager.player);
 
-            //Console.Write("\r{0}%   ", gameManager.LobbyIsFull());
+            Console.Write("\r{0}%   ", gameManager.LobbyIsFull());
 
-            //Player p = await gameManager.GetPlayer(url.PathAndQuery);
+            Player p = await gameManager.GetPlayer(url.PathAndQuery);
 
             string json = JsonConvert.SerializeObject(gameManager.player, Formatting.Indented);
             //Console.WriteLine(json);
@@ -73,30 +74,30 @@ namespace Lab1_1
             Console.WriteLine("Hard worker - you get a small increase in actions each turn and a little bit of money");
             command = Console.ReadLine();
 
-            gameManager.CreatePlayerWithFaction(command, standart);
+            gameManager.CreatePlayerWithFaction(command, gameManager.standart);
 
             int n = 0;
 
             //For multi 
-            //player.id = p.id;
-            //player.currentX = p.currentX;
-            //player.currentY = p.currentY;
-            //player.color = p.color;
-            ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-            //await UpdatePlayerAsync(player);
-            ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-            //map1.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-            //player.currentX = player.currentX;
-            //player.currentY = player.currentY;
+            gameManager.player.id = p.id;
+            gameManager.player.currentX = p.currentX;
+            gameManager.player.currentY = p.currentY;
+            gameManager.player.color = p.color;
+            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            await UpdatePlayerAsync(gameManager.player);
+            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+            gameManager.GetMap().GetUnit(gameManager.player.currentX, gameManager.player.currentY).TakeUnit(gameManager.player);
+            gameManager.player.currentX = gameManager.player.currentX;
+            gameManager.player.currentY = gameManager.player.currentY;
 
             //Sitas tris eilutes uzkomentuot jei multi
-            gameManager.TakeUnit();
-            gameManager.player.currentX = 0;
-            gameManager.player.currentY = 0;
+            //gameManager.TakeUnit();
+            //gameManager.player.currentX = 0;
+            //gameManager.player.currentY = 0;
 
             while (turnLimit > 0)
             {
-                ((Teleport)teleport).SetStartingPosition(gameManager.player.currentX, gameManager.player.currentY);
+                ((Teleport)gameManager.teleport).SetStartingPosition(gameManager.player.currentX, gameManager.player.currentY);
                 bool finishedIteration = false;
                 while (!finishedIteration)
                 {
@@ -113,7 +114,7 @@ namespace Lab1_1
                             for (int x = 0; x < gameManager.GetXSize(); x++)
                             {
                                 Console.ForegroundColor = gameManager.GetColor(x, y);
-                                Console.Write(gameManager.GetSymbol());
+                                Console.Write(gameManager.GetSymbol(x, y));
                             }
                             Console.WriteLine();
                         }
@@ -165,13 +166,13 @@ namespace Lab1_1
                 Console.WriteLine("Standart - go one space in what direction you want");
                 command = Console.ReadLine();
                 if (command.Equals("Tower"))
-                    gameManager.player.setAlgorithm(tower);
+                    gameManager.player.setAlgorithm(gameManager.tower);
                 else if(command.Equals("Hopper"))
-                    gameManager.player.setAlgorithm(hopper);
+                    gameManager.player.setAlgorithm(gameManager.hopper);
                 else if (command.Equals("Teleport"))
-                    gameManager.player.setAlgorithm(teleport);
+                    gameManager.player.setAlgorithm(gameManager.teleport);
                 else 
-                    gameManager.player.setAlgorithm(standart);
+                    gameManager.player.setAlgorithm(gameManager.standart);
 
                 
                 if (gameManager.player is HardWorker)
@@ -208,18 +209,19 @@ namespace Lab1_1
                     ((Tower)gameManager.player.getAlgorithm()).ResetStartingList();
 
                 //For multi
-                //gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
-                //while (gs.StateGame == "Updating")
-                //{
-                //    gs = await UpdateMap(player.id, Map.GetInstance.ConvertArrayToList());
-                //}
-                ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
-                //serverMap = await GetMap(player.id);
-                //Map.GetInstance.ConvertListToArray(serverMap);
-                //p = await GetPlayerAsync(url.PathAndQuery);
-                //player.MoneyMultiplier = p.MoneyMultiplier;
-                //player.NumberOfActions = p.NumberOfActions;
-                ////Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                GameState gs = gameManager.GetGameState();
+                gs = await UpdateMap(gameManager.player.id, Map.GetInstance.ConvertArrayToList());
+                while (gs.StateGame == "Updating")
+                {
+                    gs = await UpdateMap(gameManager.player.id, Map.GetInstance.ConvertArrayToList());
+                }
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                serverMap = await GetMap(gameManager.player.id);
+                Map.GetInstance.ConvertListToArray(serverMap);
+                p = await gameManager.GetLobby().GetPlayerAsync(url.PathAndQuery);
+                gameManager.player.MoneyMultiplier = p.MoneyMultiplier;
+                gameManager.player.NumberOfActions = p.NumberOfActions;
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
 
                 turnLimit--;
             }
