@@ -18,12 +18,12 @@ namespace Lab1_1.Streategy
 
         public void move(Player player, string command, Map map, bool undo)
         {
-            Console.WriteLine("Strategy pattern algorithm is being user");
+            Console.WriteLine("Strategy pattern algorithm is being used--------------");
             _algorithm.Action(player, command, map, undo);
         }
         public void setAlgorithm(Algorithm newAlgorithm)
         {
-            Console.WriteLine("New Strategy algorithm was set");
+            Console.WriteLine("New Strategy algorithm was set--------------------");
             _algorithm = newAlgorithm;
         }
         public Algorithm getAlgorithm()

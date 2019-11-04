@@ -9,7 +9,7 @@ namespace Lab1_1
        
         public override Player CreatePlayerWithFaction(string input)
         {
-            Console.WriteLine("Factory pattern is returning wanted faction");
+            Console.WriteLine("Factory pattern is returning wanted faction---------------");
 
             switch (input)
             {

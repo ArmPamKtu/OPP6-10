@@ -36,7 +36,7 @@ namespace Lab1_1
                         if (instance == null)
                         {
                             instance = new Map();
-                            Console.WriteLine("Singleton map was generated");
+                            Console.WriteLine("Singleton map instance was created------------------");
                         }
                     }
                 }
