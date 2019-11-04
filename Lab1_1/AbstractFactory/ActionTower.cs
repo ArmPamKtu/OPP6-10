@@ -10,7 +10,10 @@ namespace Lab1_1.AbstractFactory
         public ActionTower(int x, int y) : base(x, y)
         {
             symbol = 'A';
-            
+            //---Testavimui
+            Console.WriteLine("Instantiated " + this.GetType());
+            //---
+
         }
         public override void ResetSymbol()
         {

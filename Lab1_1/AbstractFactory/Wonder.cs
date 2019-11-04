@@ -10,6 +10,9 @@ namespace Lab1_1.AbstractFactory
         public Wonder(int x, int y):base(x, y)
         {
             symbol = 'W';
+            //---Testavimui
+            Console.WriteLine("Instantiated " + this.GetType());
+            //---
         }
         public override void ResetSymbol()
         {

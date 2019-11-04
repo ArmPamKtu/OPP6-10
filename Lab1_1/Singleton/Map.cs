@@ -50,9 +50,12 @@ namespace Lab1_1
 
         public Unit[][] GenerateGrid(int xSize, int ySize)
         {
+            Console.WriteLine("===Abstract Factory===");
             goldMinePrototype = (GoldMine)mapFactory.CreateSuperObstacle("Gold Mine", 0, 0);
             wonderPrototype = (Wonder)mapFactory.CreateSuperObstacle("Wonder", 0, 0);
             stonePrototype = (Stone)mapFactory.CreateObstacle("Stone", 0, 0);
+            Console.WriteLine("========");
+            Console.WriteLine("===Prototype===");
             //----------Testavimui
             //stonePrototype.TakeUnit(new Player());
             //goldMinePrototype.TakeUnit(new Player());
@@ -97,6 +100,7 @@ namespace Lab1_1
                         Grid[y][x] = new Unit(x, y);
                 }
             }
+            Console.WriteLine("========");
             return Grid;
         }
 
