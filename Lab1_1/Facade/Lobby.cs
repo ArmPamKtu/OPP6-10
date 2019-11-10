@@ -11,7 +11,7 @@ namespace Lab1_1.Facade
     {
         private static string requestUri = "https://localhost:44372/api/player/";
         private static string gmRequestUri = "/api/gamecontroller/";
-        public int maxLobbyPlayers { get; set; }
+        public int maxLobbyPlayers = 4;
 
         public HttpClient client { get; set; }
         public Lobby(HttpClient client)
@@ -22,10 +22,10 @@ namespace Lab1_1.Facade
         {
             ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
 
-            if (playersInLobby.Count < maxLobbyPlayers)
-                return false;
+            if (playersInLobby.Count == maxLobbyPlayers)
+                return true;
 
-            return true;
+            return false;
         }
         public async Task<List<Unit>> GetMap(long id)
         {
@@ -50,7 +50,7 @@ namespace Lab1_1.Facade
         private async Task<ICollection<Player>> GetAllPlayersAsync(string path)
         {
             ICollection<Player> players = null;
-            HttpResponseMessage response = await client.GetAsync(path + requestUri);
+            HttpResponseMessage response = await client.GetAsync(requestUri);
             if (response.IsSuccessStatusCode)
             {
                 players = await response.Content.ReadAsAsync<ICollection<Player>>();

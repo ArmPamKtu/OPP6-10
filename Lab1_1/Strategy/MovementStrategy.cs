@@ -23,7 +23,7 @@ namespace Lab1_1.Streategy
         }
         public void setAlgorithm(Algorithm newAlgorithm)
         {
-            Console.WriteLine("New Strategy algorithm was set--------------------");
+            Console.Write("\r New Strategy algorithm was set--------------------");
             _algorithm = newAlgorithm;
         }
         public Algorithm getAlgorithm()

@@ -60,7 +60,11 @@ namespace Lab1_1
             gameManager.player.SetName(command);
             Uri url = await gameManager.CreatePlayerAsync(gameManager.player);
 
-            Console.Write("\r{0}%   ", gameManager.LobbyIsFull());
+            while (!await gameManager.LobbyIsFull())
+            {
+                if (await gameManager.LobbyIsFull())
+                    Console.Write("\r{0}", "lobby is full");
+            }
 
             Player p = await gameManager.GetPlayer(url.PathAndQuery);
 

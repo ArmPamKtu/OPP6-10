@@ -315,13 +315,9 @@ namespace Lab1_1.Facade
             }
         }
 
-        public async Task<string> LobbyIsFull()
+        public async Task<bool> LobbyIsFull()
         {
-            while (await lobby.LobbyIsFullAsync())
-            {
-                return "Waiting for other players...";
-            }
-            return "Lobby is full";
+            return await lobby.LobbyIsFullAsync();
         }
         public async Task<Uri> CreatePlayerAsync(Player player)
         {
