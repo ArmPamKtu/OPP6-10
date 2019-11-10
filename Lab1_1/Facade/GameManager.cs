@@ -24,12 +24,14 @@ namespace Lab1_1.Facade
         public Algorithm tower;
         public Algorithm teleport;
 
+        int turnLimit = 4;
+
         public HttpClient client { get; set; }
 
         public GameManager(HttpClient client)
         {
             this.client = client;
-            lobby = new Lobby();
+            lobby = new Lobby(client);
             algorithmFactory = new AlgorithmFactory();
             player = new Player();
             factory = new FactionFactory();
@@ -41,6 +43,145 @@ namespace Lab1_1.Facade
         public Unit[][] generateGrid(int xSize, int ySize)
         {
             return Map.GetInstance.GenerateGrid(xSize, ySize);
+        }
+        public void makeMoves(List<Unit> serverMap, Player p, Uri url)
+        {
+            string command = string.Empty;
+            int n = 0;
+
+            while (turnLimit > 0)
+            {
+                ((Teleport)teleport).SetStartingPosition(player.currentX, player.currentY);
+                bool finishedIteration = false;
+                while (!finishedIteration)
+                {
+                    while (n < player.NumberOfActions)
+                    {
+
+                        n++;
+
+                        Console.WriteLine("Map looks like:");
+                        Console.WriteLine("___________");
+
+                        for (int y = 0; y < GetYSize(); y++)
+                        {
+                            for (int x = 0; x < GetXSize(); x++)
+                            {
+                                Console.ForegroundColor = GetColor(x, y);
+                                Console.Write(GetSymbol(x, y));
+                            }
+                            Console.WriteLine();
+                        }
+                        Console.ResetColor();
+
+                        Console.WriteLine("___________");
+
+                        bool succesfulMove = true;
+                        if (n != player.NumberOfActions)
+                        {
+                            while (succesfulMove)
+                            {
+
+                                if (!(player.getAlgorithm() is Teleport))
+                                {
+                                    Console.WriteLine("Choose where to go next R,L,U,D?");
+                                    command = Console.ReadLine();
+
+                                    MovePlayer(command, ref succesfulMove);
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Choose where to go next, type in two numbers with a space between them");
+                                    command = Console.ReadLine();
+
+                                    MovePlayerNext(command, ref succesfulMove);
+
+                                }
+                            }
+                            succesfulMove = true;
+                        }
+
+                    }
+                    Console.WriteLine("\n\n");
+                    Console.WriteLine("Would you like to undo your moves? (Yes/No)");
+                    command = Console.ReadLine();
+
+                    Undo(command, ref finishedIteration);
+                    n = 0;
+                }
+
+                Console.WriteLine("You have " + player.Money + " Money");
+                Console.WriteLine("Do you want to move like:");
+                Console.WriteLine("Tower - go till the end of the line");
+                Console.WriteLine("Hopper - jump over a space");
+                Console.WriteLine("Teleport - write two digits and teleport on those coordinates");
+                Console.WriteLine("Standart - go one space in what direction you want");
+                command = Console.ReadLine();
+                if (command.Equals("Tower"))
+                    player.setAlgorithm(tower);
+                else if (command.Equals("Hopper"))
+                    player.setAlgorithm(hopper);
+                else if (command.Equals("Teleport"))
+                    player.setAlgorithm(teleport);
+                else
+                    player.setAlgorithm(standart);
+
+
+                if (player is HardWorker)
+                {
+                    Console.WriteLine("As a Hard worker you can work harder and get more money per action( double), but have less actions per round( 6 actions)");
+                    if (player.MoneyMultiplier == 1)
+                        Console.WriteLine("Type 'Work' to do it!");
+                    else
+                        Console.WriteLine("Type 'Stop' to go back to normal mode");
+                    command = Console.ReadLine();
+
+                    if (command.Equals("Work"))
+                        ((HardWorker)player).WorkHarder();
+                    else if (command.Equals("Stop"))
+                        ((HardWorker)player).GetBackToNormal();
+                }
+                else if (player is Wolf)
+                {
+                    if (((Wolf)player).GetAttackLimit() != 0)
+                    {
+                        Console.WriteLine("As a Wolf you can attack an area and capture it");
+                        Console.WriteLine("If you want to attack, type a direction: R,L,U,D");
+                        command = Console.ReadLine();
+                        ((Wolf)player).AttackASpecificArea(player, command, Map.GetInstance);
+
+                    }
+                }
+                else
+                {
+
+                }
+
+                if (player.getAlgorithm() is Tower)
+                    ((Tower)player.getAlgorithm()).ResetStartingList();
+
+                //For multi
+                GameState gs = GetGameState();
+                gs = UpdateMap(player.id, Map.GetInstance.ConvertArrayToList()).Result;
+                while (gs.StateGame == "Updating")
+                {
+                    gs = UpdateMap(player.id, Map.GetInstance.ConvertArrayToList()).Result;
+                }
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+                serverMap = GetPlayerMap(player.id).Result;
+                Map.GetInstance.ConvertListToArray(serverMap);
+                p = GetPlayer(url.PathAndQuery).Result;
+                player.MoneyMultiplier = p.MoneyMultiplier;
+                player.NumberOfActions = p.NumberOfActions;
+                //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
+
+                turnLimit--;
+            }
+        }
+        public async Task<GameState> UpdateMap(long id, List<Unit> map)
+        {
+            return await lobby.UpdateMap(id, map);
         }
         public Map GetMap()
         {
@@ -174,21 +315,21 @@ namespace Lab1_1.Facade
             }
         }
 
-        public string LobbyIsFull()
+        public async Task<bool> LobbyIsFull()
         {
-            while (lobby.LobbyIsFullAsync().Result)
-            {
-                return "Waiting for other players...";
-            }
-            return "Lobby is full";
+            return await lobby.LobbyIsFullAsync();
         }
-        public Uri CreatePlayer(Player player)
+        public async Task<Uri> CreatePlayerAsync(Player player)
         {
-            return lobby.CreatePlayerAsync(player).Result;
+            return await lobby.CreatePlayerAsync(player);
         }
         public async Task<Player> GetPlayer(string path)
         {
             return await lobby.GetPlayerAsync(path);
+        }
+        public async Task<List<Unit>> GetPlayerMap(long id)
+        {
+            return await lobby.GetMap(id);
         }
 
         public Lobby GetLobby()

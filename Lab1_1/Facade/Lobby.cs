@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab1_1.Observer;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -8,22 +9,48 @@ namespace Lab1_1.Facade
 {
     public class Lobby
     {
-        private static HttpClient client = new HttpClient();
-        private static string requestUri = "https://localhost:44338/api/player/";
-        public int maxLobbyPlayers { get; set; }
+        private static string requestUri = "https://localhost:44372/api/player/";
+        private static string gmRequestUri = "/api/gamecontroller/";
+        public int maxLobbyPlayers = 4;
+
+        public HttpClient client { get; set; }
+        public Lobby(HttpClient client)
+        {
+            this.client = client;
+        }
         public async Task<bool> LobbyIsFullAsync()
         {
             ICollection<Player> playersInLobby = await GetAllPlayersAsync(client.BaseAddress.PathAndQuery);
 
-            if (playersInLobby.Count < maxLobbyPlayers)
-                return false;
+            if (playersInLobby.Count == maxLobbyPlayers)
+                return true;
 
-            return true;
+            return false;
+        }
+        public async Task<List<Unit>> GetMap(long id)
+        {
+            List<Unit> map = null;
+            HttpResponseMessage response = await client.GetAsync(gmRequestUri + $"{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                map = await response.Content.ReadAsAsync<List<Unit>>();
+            }
+            return map;
+        }
+        public async Task<GameState> UpdateMap(long id, List<Unit> map)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                gmRequestUri + $"{id}", map);
+            response.EnsureSuccessStatusCode();
+
+            GameState gs = await response.Content.ReadAsAsync<GameState>();
+
+            return gs;
         }
         private async Task<ICollection<Player>> GetAllPlayersAsync(string path)
         {
             ICollection<Player> players = null;
-            HttpResponseMessage response = await client.GetAsync(path + requestUri);
+            HttpResponseMessage response = await client.GetAsync(requestUri);
             if (response.IsSuccessStatusCode)
             {
                 players = await response.Content.ReadAsAsync<ICollection<Player>>();
