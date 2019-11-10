@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lab1_1.Facade
 {
-    class GameManager
+    public class GameManager
     {
 
         private Lobby lobby;

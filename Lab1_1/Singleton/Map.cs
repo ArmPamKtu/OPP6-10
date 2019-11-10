@@ -10,7 +10,7 @@ namespace Lab1_1
         private const double CWonderThreshold = 0.99;
         private const double CGoldMineThreshold = 0.93;
         private const double CStoneThreshold = 0.85;
-        private Unit[][] Grid { get; set; }
+        public Unit[][] Grid { get; set; }
         private static int counter = 0;
         private static MapFactory mapFactory = new MapFactory();
         private static readonly object Instancelock = new object();
@@ -19,7 +19,7 @@ namespace Lab1_1
         private Wonder wonderPrototype;
         private Stone stonePrototype;
 
-        private Map()
+        public Map()
         {
             counter++;
         }
@@ -124,7 +124,7 @@ namespace Lab1_1
 
         }
 
-        public List<Unit> ConvertArrayToList()
+        public virtual List<Unit> ConvertArrayToList()
         {
             List<Unit> unitList = new List<Unit>();
             for (int y = 0; y < GetYSize(); y++)
@@ -137,7 +137,7 @@ namespace Lab1_1
             return unitList;
         }
 
-        public void ConvertListToArray(List<Unit> unitList)
+        public virtual void ConvertListToArray(List<Unit> unitList)
         {
             for (int y = 0; y < GetYSize(); y++)
             {
