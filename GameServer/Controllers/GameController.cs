@@ -98,6 +98,7 @@ namespace GameServer.Controllers
             List<MapUnit> mp;
 
             var val = _context.PP_ID.ToList().Where(x => x.Id == id).FirstOrDefault();
+            var playerc = _context.Players.Find(id);
 
             if (val == null)
             {
@@ -134,6 +135,16 @@ namespace GameServer.Controllers
                         {
                             mu.color = (ConsoleColor)15;
                             //mu.ownerName = null;
+                            _context.Map.Update(mu);
+                        }
+                        else
+                        {
+
+                        }
+
+                        if (mu.symbol == '*' && mu.color != playerc.color)
+                        {
+                            mu.symbol = '0';
                             _context.Map.Update(mu);
                         }
                     }

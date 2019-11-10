@@ -7,7 +7,7 @@ namespace GameServer.Models
 {
     public class Constants
     {
-        public const int playerCount = 4;
+        public const int playerCount = 2;
         public const int mapLenghtX = 10;
         public const int mapLenghtY = 10;
         public const int numberOfActions = 7;
