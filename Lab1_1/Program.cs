@@ -29,7 +29,7 @@ namespace Lab1_1
 
             client = new HttpClient(clientHandler);
 
-            client.BaseAddress = new Uri("https://localhost:44372/"); //api /player/");
+            client.BaseAddress = new Uri("https://localhost:44338/"); //api /player/");
             client.DefaultRequestHeaders.Accept.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(

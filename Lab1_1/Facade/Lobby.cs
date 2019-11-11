@@ -9,9 +9,9 @@ namespace Lab1_1.Facade
 {
     public class Lobby
     {
-        private static string requestUri = "https://localhost:44372/api/player/";
+        private static string requestUri = "https://localhost:44338/api/player/";
         private static string gmRequestUri = "/api/gamecontroller/";
-        public int maxLobbyPlayers = 4;
+        public int maxLobbyPlayers = 2;
 
         public HttpClient client { get; set; }
         public Lobby(HttpClient client)

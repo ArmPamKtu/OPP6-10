@@ -141,12 +141,12 @@ namespace GameServer.Controllers
                         {
 
                         }
-
+                        /*
                         if (mu.symbol == '*' && mu.color != playerc.color)
                         {
                             mu.symbol = '0';
                             _context.Map.Update(mu);
-                        }
+                        }*/
                     }
                 }
                 _context.SaveChanges();

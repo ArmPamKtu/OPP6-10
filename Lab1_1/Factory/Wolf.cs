@@ -19,7 +19,7 @@ namespace Lab1_1
         }
         public void AttackASpecificArea(Player player, string command, Map map)
         {
-
+            int n = 0;
             player.SetPreviousCoordinates(player.currentX, player.currentY);
 
             switch (command)
@@ -54,14 +54,16 @@ namespace Lab1_1
                     TakeSquire(player, map);
                     break;
                 default:
-                    map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
-                    player.currentX = 0;
-                    player.currentY = 0;
+                    Console.WriteLine("wrong command");
+                    n++;
                     break;
             }
-            map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
-            map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
-            AttackLimit = 0;
+            if (n == 0)
+            {
+                map.GetUnit(player.GetPreviousX(), player.GetPreviousY()).ResetSymbol();
+                map.GetUnit(player.currentX, player.currentY).TakeUnit(player);
+                AttackLimit = 0;
+            }
 
         }
 

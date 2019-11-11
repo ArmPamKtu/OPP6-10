@@ -98,9 +98,9 @@ namespace Lab1_1
 
             if (getAlgorithm() is Teleport)
             {
-                Map.GetInstance.GetUnit(((Teleport)getAlgorithm()).GetStartingX(), ((Teleport)getAlgorithm()).GetStartingX()).symbol = symbol;
+                Map.GetInstance.GetUnit(((Teleport)getAlgorithm()).GetStartingX(), ((Teleport)getAlgorithm()).GetStartingY()).symbol = symbol;
                 currentX = ((Teleport)getAlgorithm()).GetStartingX();
-                currentY = ((Teleport)getAlgorithm()).GetStartingX();
+                currentY = ((Teleport)getAlgorithm()).GetStartingY();
             }
             else
             {
