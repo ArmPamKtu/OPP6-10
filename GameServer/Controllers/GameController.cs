@@ -153,7 +153,7 @@ namespace GameServer.Controllers
                         {
                             mu.symbol = '0';
                             _context.Map.Update(mu);
-                        }*/
+                        }
                     }
                 }
                 _context.SaveChanges();
