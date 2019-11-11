@@ -110,8 +110,11 @@ namespace Lab1_1
             {
                 for (int j = startY; j <= endY; j++)
                 {
-                    map.GetUnit(i, j).TakeUnit(player);
-                    map.GetUnit(i, j).ResetSymbol();
+                    if (map.GetUnit(i, j).symbol.Equals('0') || map.GetUnit(i, j).symbol.Equals('*'))
+                    {
+                        map.GetUnit(i, j).TakeUnit(player);
+                        map.GetUnit(i, j).ResetSymbol();
+                    }
                 }
             }
         }
