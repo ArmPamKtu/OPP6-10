@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lab1_1.Adapter
 {
-    public class MapJsonAdapter
+    public class MapJsonAdapter : Map
     {
-        MapJson map;
-        public List<Unit> ConvertJsonToList()
+        MapJson map = new MapJson();
+        public override List<Unit> ConvertArrayToList()
         {
-            return map.ConvertArrayToList();
+            return map.ConvertJsonToList();
         }
-        public void ConvertListToJson(List<Unit> unitList)
+        public override void ConvertListToArray(List<Unit> unitList)
         {
-            map.ConvertListToArray(unitList);
+            map.ConvertListToJson(unitList);
         }
     }
 }
