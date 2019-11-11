@@ -24,7 +24,7 @@ namespace Lab1_1.AbstractFactory
             //TakeUnit('0', player.GetColor(), player);
 
             if(map.GetUnit(cords.Item1, cords.Item2).GetSymbol()==this.symbol)
-                if (area.TrueForAll(item => item.color == area[0].color))
+                if (area.TrueForAll(item => item.color == area[0].color && item.color != (ConsoleColor)15))
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('0', area[0].color);
         }
 

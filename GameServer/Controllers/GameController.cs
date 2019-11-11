@@ -81,6 +81,9 @@ namespace GameServer.Controllers
         {
             _context.Map.RemoveRange(_context.Map);
             _context.Players.RemoveRange(_context.Players);
+            _context.PP_ID.RemoveRange(_context.PP_ID);
+            _context.PG_ID.RemoveRange(_context.PG_ID);
+            _context.State.RemoveRange(_context.State);
             _context.SaveChanges();
             return NoContent();
         }
@@ -119,19 +122,23 @@ namespace GameServer.Controllers
                         {
                             mu.color = u.GetColor();
                             mu.symbol = u.symbol;
-                            //if (u.owner != null)
-                            //    mu.ownerName = u.owner.Name;
                             _context.Map.Update(mu);
                         }//testavimui
                         else if (u.GetSymbol() == '*')
                         {
-                            mu.color = u.GetColor();
-                            mu.symbol = u.symbol;
-                            //if (u.owner != null)
-                            //    mu.ownerName = u.owner.Name;
+                            if (u.GetColor() != playerc.color)
+                            {
+                                mu.color = u.GetColor();
+                                mu.symbol = '0';
+                            }
+                            else
+                            {
+                                mu.color = u.GetColor();
+                                mu.symbol = u.symbol;
+                            }
                             _context.Map.Update(mu);
                         }
-                        else if (mu.color != (ConsoleColor)15 && u.color != (ConsoleColor)15 && mu.color != u.color)
+                        else if (mu.symbol == '0' && u.GetSymbol() == '0' && mu.color != (ConsoleColor)15 && u.color != (ConsoleColor)15 && mu.color != u.color)
                         {
                             mu.color = (ConsoleColor)15;
                             //mu.ownerName = null;
@@ -141,7 +148,7 @@ namespace GameServer.Controllers
                         {
 
                         }
-                        /*
+
                         if (mu.symbol == '*' && mu.color != playerc.color)
                         {
                             mu.symbol = '0';

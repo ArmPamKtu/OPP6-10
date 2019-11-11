@@ -24,7 +24,7 @@ namespace Lab1_1.AbstractFactory
             //GameController.EndGame(owner)
 
             if (map.GetUnit(cords.Item1, cords.Item2).GetSymbol() == this.symbol)
-                if (area.TrueForAll(item => item.color == area[0].color))
+                if (area.TrueForAll(item => item.color == area[0].color && item.color != (ConsoleColor)15))
                 {
                     map.GetUnit(cords.Item1, cords.Item2).TakeUnit('W', area[0].color);
                 }
