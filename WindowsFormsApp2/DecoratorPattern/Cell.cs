@@ -13,7 +13,7 @@ namespace WindowsFormsApp2.DecoratorPattern
 
         public TextureBrush GetBrush()
         {
-            return tb;
+            return this.tb;
         }
 
     }

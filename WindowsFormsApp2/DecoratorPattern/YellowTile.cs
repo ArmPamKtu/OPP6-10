@@ -15,7 +15,7 @@ namespace WindowsFormsApp2.DecoratorPattern
         }
         public TextureBrush GetBrush()
         {
-            return _cell.tb;
+            return _cell.GetBrush();
         }
     }
 }

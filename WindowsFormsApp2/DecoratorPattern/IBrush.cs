@@ -8,5 +8,6 @@ namespace WindowsFormsApp2.DecoratorPattern
     public interface IBrush
     {
         void SetBrush(TextureBrush _tb);
+        TextureBrush GetBrush();
     }
 }
