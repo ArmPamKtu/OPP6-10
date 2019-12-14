@@ -141,6 +141,17 @@ namespace GameServer.Controllers
                         else if (mu.symbol == '0' && u.GetSymbol() == '0' && mu.color != (ConsoleColor)15 && u.color != (ConsoleColor)15 && mu.color != u.color)
                         {
                             mu.color = (ConsoleColor)15;
+                            //mu.ownerName = null;
+                            _context.Map.Update(mu);
+                        }
+                        else
+                        {
+
+                        }
+
+                        if (mu.symbol == '*' && mu.color != playerc.color)
+                        {
+                            mu.symbol = '0';
                             _context.Map.Update(mu);
                         }
                     }

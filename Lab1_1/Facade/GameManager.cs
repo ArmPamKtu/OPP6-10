@@ -87,6 +87,7 @@ namespace Lab1_1.Facade
 
                                 if (!(player.getAlgorithm() is Teleport))
                                 {
+                                    
                                     Console.WriteLine("Choose where to go next R,L,U,D?");
                                     command = Console.ReadLine();
 
@@ -177,6 +178,7 @@ namespace Lab1_1.Facade
                 p = GetPlayer(url.PathAndQuery).Result;
                 player.MoneyMultiplier = p.MoneyMultiplier;
                 player.NumberOfActions = p.NumberOfActions;
+
                 //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
 
                 turnLimit--;
@@ -236,7 +238,7 @@ namespace Lab1_1.Facade
             bool number1Success = Int32.TryParse(numbers[0], out XPosition);
             bool number2Success = Int32.TryParse(numbers[1], out YPosition);
 
-            if (number1Success && number1Success && XPosition < 20 && YPosition < 20 && XPosition >= 0 && YPosition >= 0 && Map.GetInstance.GetUnit(XPosition, YPosition).symbol.Equals('0'))
+            if (number1Success && number1Success && XPosition < 20 && YPosition < 20 && XPosition >= 0 && YPosition >= 0 && (Map.GetInstance.GetUnit(XPosition, YPosition).symbol.Equals('0') || Map.GetInstance.GetUnit(XPosition, YPosition).symbol.Equals('*')))
             {
                 player.ExecuteMove(command, player);
                 succesfulMove = false;
@@ -251,7 +253,7 @@ namespace Lab1_1.Facade
             switch (command)
             {
                 case ("D"):
-                    if (player.currentY + player.Power < Map.GetInstance.GetYSize() && Map.GetInstance.GetUnit(player.currentX, player.currentY + player.Power).symbol.Equals('0'))
+                    if (player.currentY + player.Power < Map.GetInstance.GetYSize() && ( Map.GetInstance.GetUnit(player.currentX, player.currentY + player.Power).symbol.Equals('0') || Map.GetInstance.GetUnit(player.currentX, player.currentY + player.Power).symbol.Equals('*')))
                     {
                         player.ExecuteMove(command, player);
                         succesfulMove = false;
@@ -260,7 +262,7 @@ namespace Lab1_1.Facade
                         Console.WriteLine("You are at the edge of the map OR going into an obstacle");
                     break;
                 case ("U"):
-                    if (player.currentY - player.Power >= 0 && Map.GetInstance.GetUnit(player.currentX, player.currentY - player.Power).symbol.Equals('0'))
+                    if (player.currentY - player.Power >= 0 && (Map.GetInstance.GetUnit(player.currentX, player.currentY - player.Power).symbol.Equals('0') || Map.GetInstance.GetUnit(player.currentX, player.currentY - player.Power).symbol.Equals('*')))
                     {
                         player.ExecuteMove(command, player);
                         succesfulMove = false;
@@ -269,7 +271,7 @@ namespace Lab1_1.Facade
                         Console.WriteLine("You are at the edge of the map OR going into an obstacle");
                     break;
                 case ("R"):
-                    if (player.currentX + player.Power < Map.GetInstance.GetXSize() && Map.GetInstance.GetUnit(player.currentX + player.Power, player.currentY).symbol.Equals('0'))
+                    if (player.currentX + player.Power < Map.GetInstance.GetXSize() && (Map.GetInstance.GetUnit(player.currentX + player.Power, player.currentY ).symbol.Equals('0') || Map.GetInstance.GetUnit(player.currentX + player.Power, player.currentY ).symbol.Equals('*')))
                     {
                         player.ExecuteMove(command, player);
                         succesfulMove = false;
@@ -278,7 +280,7 @@ namespace Lab1_1.Facade
                         Console.WriteLine("You are at the edge of the map OR going into an obstacle");
                     break;
                 case ("L"):
-                    if (player.currentX - player.Power >= 0 && Map.GetInstance.GetUnit(player.currentX - player.Power, player.currentY).symbol.Equals('0'))
+                    if (player.currentX - player.Power >= 0 && (Map.GetInstance.GetUnit(player.currentX - player.Power, player.currentY ).symbol.Equals('0') || Map.GetInstance.GetUnit(player.currentX - player.Power, player.currentY ).symbol.Equals('*')))
                     {
                         player.ExecuteMove(command, player);
                         succesfulMove = false;

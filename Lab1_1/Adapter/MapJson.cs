@@ -5,15 +5,15 @@ using Newtonsoft.Json;
 
 namespace Lab1_1.Adapter
 {
-    class MapJson : Map
+    class MapJson
     {
         private string mapJson;
-        public override List<Unit> ConvertArrayToList()
+        public List<Unit> ConvertJsonToList()
         {
-            List<Unit> unitList = JsonConvert.DeserializeObject<List<Unit>>(mapJson); 
+            List<Unit> unitList = JsonConvert.DeserializeObject<List<Unit>>(mapJson);
             return unitList;
         }
-        public override void ConvertListToArray(List<Unit> unitList)
+        public void ConvertListToJson(List<Unit> unitList)
         {
             mapJson = JsonConvert.SerializeObject(unitList);
         }
