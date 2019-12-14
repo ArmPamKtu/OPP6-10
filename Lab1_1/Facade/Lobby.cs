@@ -1,6 +1,7 @@
 ﻿using Lab1_1.Observer;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Lab1_1.Facade
         private static string requestUri = "https://localhost:44393/api/player/";
         private static string gmRequestUri = "/api/gamecontroller/";
         public int maxLobbyPlayers = 2;
+        public Uri url;
 
         public HttpClient client { get; set; }
         public Lobby(HttpClient client)
@@ -27,6 +29,7 @@ namespace Lab1_1.Facade
 
             return false;
         }
+
         public async Task<List<Unit>> GetMap(long id)
         {
             List<Unit> map = null;
@@ -36,6 +39,14 @@ namespace Lab1_1.Facade
                 map = await response.Content.ReadAsAsync<List<Unit>>();
             }
             return map;
+        }
+        public async Task<HttpStatusCode> UpdatePlayerAsync(Player player)
+        {
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                requestUri + $"{player.id}", player);
+            response.EnsureSuccessStatusCode();
+
+            return response.StatusCode;
         }
         public async Task<GameState> UpdateMap(long id, List<Unit> map)
         {
@@ -72,6 +83,7 @@ namespace Lab1_1.Facade
             {
                 ShowPlayer(player2);
             }
+            url = response.Headers.Location;
 
             return response.Headers.Location;
         }

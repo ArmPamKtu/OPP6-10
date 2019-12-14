@@ -29,7 +29,7 @@ namespace Lab1_1
 
             client = new HttpClient(clientHandler);
 
-            client.BaseAddress = new Uri("https://localhost:44372/"); //api /player/");
+            client.BaseAddress = new Uri("https://localhost:44393/"); //api /player/");
             client.DefaultRequestHeaders.Accept.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(
@@ -56,7 +56,7 @@ namespace Lab1_1
             Console.WriteLine("Enter player's name to start looking for a loby (you will be added to a lobby automatically)");
             command = Console.ReadLine();
 
-            //     For multi
+            //For multi
             gameManager.player.SetName(command);
             Uri url = await gameManager.CreatePlayerAsync(gameManager.player);
 
@@ -67,10 +67,6 @@ namespace Lab1_1
             }
 
             Player p = await gameManager.GetPlayer(url.PathAndQuery);
-
-            string json = JsonConvert.SerializeObject(gameManager.player, Formatting.Indented);
-            //Console.WriteLine(json);
-
 
             Console.WriteLine("choose your faction:");
             Console.WriteLine("Wolfs - they get an extra action each turn");
@@ -87,9 +83,7 @@ namespace Lab1_1
             gameManager.player.currentX = p.currentX;
             gameManager.player.currentY = p.currentY;
             gameManager.player.color = p.color;
-            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
             await UpdatePlayerAsync(gameManager.player);
-            //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
             gameManager.GetMap().GetUnit(gameManager.player.currentX, gameManager.player.currentY).TakeUnit(gameManager.player);
             gameManager.player.currentX = gameManager.player.currentX;
             gameManager.player.currentY = gameManager.player.currentY;

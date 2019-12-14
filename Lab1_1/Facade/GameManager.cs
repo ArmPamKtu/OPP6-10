@@ -3,6 +3,7 @@ using Lab1_1.Observer;
 using Lab1_1.Streategy;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,8 @@ namespace Lab1_1.Facade
 
         public HttpClient client { get; set; }
 
+        public GameManager() { 
+        }
         public GameManager(HttpClient client)
         {
             this.client = client;
@@ -207,7 +210,7 @@ namespace Lab1_1.Facade
         {
             return Map.GetInstance.GetUnit(x, y).GetSymbol();
         }
-        public void takeUnit()
+        public void TakeUnit()
         {
             Map.GetInstance.GetUnit(0, 0).TakeUnit(player);
         }
@@ -314,7 +317,6 @@ namespace Lab1_1.Facade
                     break;
             }
         }
-
         public async Task<bool> LobbyIsFull()
         {
             return await lobby.LobbyIsFullAsync();
@@ -331,11 +333,13 @@ namespace Lab1_1.Facade
         {
             return await lobby.GetMap(id);
         }
-
+        public async Task<HttpStatusCode> UpdatePlayerAsync(Player player)
+        {
+            return await lobby.UpdatePlayerAsync(player);
+        }
         public Lobby GetLobby()
         {
             return lobby;
-
         }
     }
 }
