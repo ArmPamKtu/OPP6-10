@@ -10,7 +10,7 @@ namespace Lab1_1.Facade
 {
     public class Lobby
     {
-        private static string requestUri = "https://localhost:44338/api/player/";
+        private static string requestUri = "https://localhost:44393/api/player/";
         private static string gmRequestUri = "/api/gamecontroller/";
         public int maxLobbyPlayers = 2;
         public Uri url;
