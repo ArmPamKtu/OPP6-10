@@ -52,6 +52,7 @@ namespace WindowsFormsApp2.StatePattern
                 Player p = await gameManager.GetLobby().GetPlayerAsync(gameManager.GetLobby().url.PathAndQuery);
                 gameManager.player.MoneyMultiplier = p.MoneyMultiplier;
                 gameManager.player.NumberOfActions = p.NumberOfActions;
+
                 gameManager.GetMap().GetUnit(gameManager.player.currentX, gameManager.player.currentY).TakeUnit(gameManager.player);
                 Constants.form.RenderMap();
             }

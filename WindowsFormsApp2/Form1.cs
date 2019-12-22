@@ -46,6 +46,7 @@ namespace WindowsFormsApp2
             bm = new Bitmap(mapSize * titleSizeX, mapSize * titleSizeY);
             gfx = Graphics.FromImage(bm);
 
+
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
             client = new HttpClient(clientHandler);
@@ -113,6 +114,7 @@ namespace WindowsFormsApp2
 
         private new void Move(string direction)
         {
+            
             context.NextState(direction);
             RenderMap();
         }

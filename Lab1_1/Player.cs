@@ -1,6 +1,7 @@
 ﻿using Lab1_1.CommandCommandPattern;
 using Lab1_1.CommandPattern;
 using Lab1_1.Streategy;
+using Lab1_1.MementoPattern;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -87,7 +88,7 @@ namespace Lab1_1
         {
             Console.WriteLine("Undoing your moves");
 
-            for(int i = 0; i < NumberOfActions; i++)
+            for (int i = 0; i < NumberOfActions; i++)
             {
                 if(_curentMoveNumber > 0)
                 {
@@ -123,6 +124,27 @@ namespace Lab1_1
         {
             return (Player)this.MemberwiseClone();
         }
+
+        // Stores memento
+        public Memento SaveMemento()
+        {
+            Console.WriteLine("\nSaving state --\n");
+            return new Memento(Money, Name, Faction, previousX, previousY, currentX, currentY);
+        }
+
+        // Restores memento
+        public void RestoreMemento(Memento memento)
+        {
+            Console.WriteLine("\nRestoring state --\n");
+            this.Money = memento.Money;
+            this.Name = memento.Name;
+            this.Faction = memento.Faction;
+            this.previousX = memento.PreviousX;
+            this.previousY = memento.PreviousY;
+            this.currentX = memento.CurrentX;
+            this.currentY = memento.CurrentY;
+        }
+
 
     }
     public class gamePlayer : Player

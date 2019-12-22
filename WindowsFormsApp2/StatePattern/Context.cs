@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Lab1_1.Facade;
+using Lab1_1.MementoPattern;
 using Lab1_1.Streategy;
 
 namespace WindowsFormsApp2.StatePattern
@@ -14,6 +15,9 @@ namespace WindowsFormsApp2.StatePattern
         private State state;
         private GameManager gameManager;
         private bool succesfulMove;
+
+
+        private Caretaker _playerSnapshot = new Caretaker();
 
         public Context(GameManager gm)
         {
@@ -40,6 +44,10 @@ namespace WindowsFormsApp2.StatePattern
                     state.RenderElements();
                     if (turnLimit > 0)
                     {
+                        //memento -----------------------------------------------
+                        _playerSnapshot.Memento = gameManager.player.SaveMemento();
+
+
                         ((Teleport)gameManager.teleport).SetStartingPosition(gameManager.player.currentX, gameManager.player.currentY);
 
                         if (n < gameManager.player.NumberOfActions)
@@ -65,6 +73,11 @@ namespace WindowsFormsApp2.StatePattern
                     state = new PlayState();
                     break;
                 case UndoState _:
+
+                    //memento-------------------------------------------------
+                    gameManager.player.RestoreMemento(_playerSnapshot.Memento);
+
+
                     state.RenderElements();
                     if (state.IsIterationFinished()) {
                         turnLimit--;
