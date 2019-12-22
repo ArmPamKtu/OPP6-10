@@ -37,6 +37,8 @@ namespace WindowsFormsApp2.StatePattern
                 gameManager.player.setAlgorithm(gameManager.teleport);
             else
                 gameManager.player.setAlgorithm(gameManager.standart);
+
+            tb1.Text = "";
         }
     }
 }

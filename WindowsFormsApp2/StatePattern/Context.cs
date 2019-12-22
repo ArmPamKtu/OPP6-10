@@ -34,7 +34,8 @@ namespace WindowsFormsApp2.StatePattern
             {
                 case LoginState _:
                     state.RenderElements();
-                    state = new PlayState();
+                    state = new PlayState(gameManager);
+                    state.RenderElements();
                     break;
                 case PlayState _:
                     state.RenderElements();
@@ -45,7 +46,8 @@ namespace WindowsFormsApp2.StatePattern
                         if (n < gameManager.player.NumberOfActions)
                         {
                             n++;
-                            gameManager.MovePlayer(direction, ref succesfulMove);
+                            if(!(gameManager.player.getAlgorithm() is Teleport))
+                                gameManager.MovePlayer(direction, ref succesfulMove);
                             if (succesfulMove) { n--; }
                         }
                         else {
@@ -62,7 +64,8 @@ namespace WindowsFormsApp2.StatePattern
                     break;
                 case ChooseState _:
                     state.RenderElements();
-                    state = new PlayState();
+                    state = new PlayState(gameManager);
+                    state.RenderElements();
                     break;
                 case UndoState _:
                     state.RenderElements();
@@ -71,7 +74,7 @@ namespace WindowsFormsApp2.StatePattern
                         state = new ChooseState(gameManager);
                     }
                     else{
-                        state = new PlayState();
+                        state = new PlayState(gameManager);
                     }
                     break;
                 case StopState _:

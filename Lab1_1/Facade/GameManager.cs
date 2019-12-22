@@ -1,4 +1,5 @@
 ﻿using Lab1_1.AbstractFactory;
+using Lab1_1.Interpreter;
 using Lab1_1.Observer;
 using Lab1_1.Streategy;
 using System;
@@ -227,6 +228,16 @@ namespace Lab1_1.Facade
             {
                 player.ResetCommands();
                 finishedIteration = true;
+            }
+        }
+        public void TeleportPlayer(string text)
+        {
+            if (text.Length != 0)
+            {
+                bool succesfulMove = true;
+                Context _context = new Context(player.currentX, player.currentY, GetXSize());
+                _context.Parse(text);
+                MovePlayerNext(_context.GetCordinates(), ref succesfulMove);
             }
         }
         public void MovePlayerNext(string command, ref bool succesfulMove)
