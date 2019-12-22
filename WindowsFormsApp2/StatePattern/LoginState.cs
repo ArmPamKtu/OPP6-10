@@ -7,6 +7,7 @@ using Lab1_1.Facade;
 using Lab1_1;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Lab1_1.TemplateMethodPattern;
 
 namespace WindowsFormsApp2.StatePattern
 {
@@ -45,13 +46,36 @@ namespace WindowsFormsApp2.StatePattern
                 gameManager.player.color = p.color;
                 await gameManager.UpdatePlayerAsync(gameManager.player);
                 gameManager.GetMap().GetUnit(gameManager.player.currentX, gameManager.player.currentY).TakeUnit(gameManager.player);
+                
+                
+                
                 while (!await gameManager.LobbyIsFull())
                 {
                     Debug.WriteLine(gameManager.LobbyIsFull());
                     if (await gameManager.LobbyIsFull())
                         Debug.Write("\r{0}", "lobby is full");
                 }
+
+                AbstractStart crossStart = new CrossMovement();
+                AbstractStart squareStart = new SquareMovement();
+                Random rnd = new Random();
+
+
+                if (rnd.Next(0, 2) == 0)
+                {
+                    crossStart.GameStart(gameManager.GetMap(), gameManager.player);
+                }
+                else
+                {
+                    squareStart.GameStart(gameManager.GetMap(), gameManager.player);
+                }
+
+
                 Constants.form.RenderMap();
+
+             
+
+
                 Constants.IsButtonActive = true;
             }
             else
@@ -60,6 +84,7 @@ namespace WindowsFormsApp2.StatePattern
                 gameManager.TakeUnit();
                 gameManager.player.currentX = 0;
                 gameManager.player.currentY = 0;
+
                 Constants.IsButtonActive = true;
             }
         }
