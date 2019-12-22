@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Lab1_1.Proxy;
 using Newtonsoft.Json;
 
 namespace Lab1_1.Adapter

@@ -1,20 +1,21 @@
-﻿using Lab1_1.Proxy;
+﻿using Lab1_1.Adapter;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lab1_1.Adapter
+namespace Lab1_1.Proxy
 {
-    public class MapJsonAdapter : MapDataConvert
+    class Proxy : MapDataConvert
     {
-        MapJson map = new MapJson();
         public List<Unit> ConvertArrayToList()
         {
+            MapJson map = new MapJson();
             return map.ConvertJsonToList();
         }
         public void ConvertListToArray(List<Unit> unitList)
         {
+            MapJson map = new MapJson();
             map.ConvertListToJson(unitList);
         }
     }
