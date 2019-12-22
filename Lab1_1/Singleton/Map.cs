@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Lab1_1.AbstractFactory;
+using Lab1_1.Proxy;
 
 namespace Lab1_1
 {
-    public class Map
+    public class Map : MapDataConvert
     {
         private const double CWonderThreshold = 0.99;
         private const double CGoldMineThreshold = 0.93;
@@ -124,7 +125,7 @@ namespace Lab1_1
 
         }
 
-        public virtual List<Unit> ConvertArrayToList()
+        public List<Unit> ConvertArrayToList()
         {
             List<Unit> unitList = new List<Unit>();
             for (int y = 0; y < GetYSize(); y++)
@@ -137,7 +138,7 @@ namespace Lab1_1
             return unitList;
         }
 
-        public virtual void ConvertListToArray(List<Unit> unitList)
+        public void ConvertListToArray(List<Unit> unitList)
         {
             for (int y = 0; y < GetYSize(); y++)
             {
