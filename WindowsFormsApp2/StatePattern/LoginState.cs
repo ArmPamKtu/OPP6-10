@@ -27,6 +27,7 @@ namespace WindowsFormsApp2.StatePattern
             tb1.Enabled = false;
             tb2.Enabled = false;
             bt1.Enabled = false;
+            tb1.Text = "";
 
             gameManager.player.SetName(playerName);
             if (Constants.online)

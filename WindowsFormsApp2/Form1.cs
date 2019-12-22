@@ -121,7 +121,6 @@ namespace WindowsFormsApp2
 
         private void Form2_KeyDown(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine("testgin");
             if (Constants.IsButtonActive)
             {
                 if (e.KeyCode == Keys.A)
