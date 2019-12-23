@@ -6,7 +6,7 @@ namespace Lab1_1.TemplateMethodPattern
 {
     public class SquareMovement : AbstractStart
     {
-        public override void ExtraPositions(Map map, Player player)
+        sealed public override void ExtraPositions(Map map, Player player)
         {
             if (player.currentX > 1 && player.currentY > 1)
             {
