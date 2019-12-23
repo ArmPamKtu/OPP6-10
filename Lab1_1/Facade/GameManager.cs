@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Lab1_1.Iterator;
 
 namespace Lab1_1.Facade
 {
@@ -17,6 +18,7 @@ namespace Lab1_1.Facade
     {
 
         private Lobby lobby;
+        private MapIterator mapIterator;
         public AlgorithmFactory algorithmFactory;
         private ObstacleAbstractFactory mapFactory;
         private ObstacleAbstractFactory shopFactory;
@@ -45,6 +47,7 @@ namespace Lab1_1.Facade
             hopper = algorithmFactory.GetDefault("Hopper");
             tower = algorithmFactory.GetDefault("Tower");
             teleport = algorithmFactory.GetDefault("Teleport");
+            mapIterator = Map.GetInstance.CreateIterator(Map.GetInstance);
         }
         public Unit[][] generateGrid(int xSize, int ySize)
         {
@@ -69,6 +72,15 @@ namespace Lab1_1.Facade
                         Console.WriteLine("Map looks like:");
                         Console.WriteLine("___________");
 
+                        //---------ITERATOR Realizacija------------
+                        for (mapIterator.First(); !mapIterator.IsDone(); mapIterator.Next())
+                        {
+                            Console.ForegroundColor = (mapIterator.CurrentItem() as Unit).GetColor();
+                            Console.Write((mapIterator.CurrentItem() as Unit).GetSymbol());
+                        }
+
+                        /*
+                        //---------FOR LOOP Realizacija------------
                         for (int y = 0; y < GetYSize(); y++)
                         {
                             for (int x = 0; x < GetXSize(); x++)
@@ -78,6 +90,8 @@ namespace Lab1_1.Facade
                             }
                             Console.WriteLine();
                         }
+                        //-----------------------------------------
+                        */
                         Console.ResetColor();
 
                         Console.WriteLine("___________");
@@ -324,29 +338,6 @@ namespace Lab1_1.Facade
             player = factory.CreatePlayerWithFaction(command);
             player.Creation();
             player.setAlgorithm(standart);
-        }
-        public void CreateAnObstacle(string command)
-        {
-            switch (command)
-            {
-                case "Stone":
-                    mapFactory.CreateObstacle(command);
-                    break;
-                case "Tree":
-                    shopFactory.CreateObstacle(command);
-                    break;
-                case "Gold Mine":
-                    mapFactory.CreateSuperObstacle(command);
-                    break;
-                case "Action Tower":
-                    shopFactory.CreateSuperObstacle(command);
-                    break;
-                case "Wonder":
-                    mapFactory.CreateSuperObstacle(command);
-                    break;
-                default:
-                    break;
-            }
         }
         public async Task<bool> LobbyIsFull()
         {
