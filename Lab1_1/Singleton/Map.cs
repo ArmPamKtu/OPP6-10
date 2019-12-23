@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Lab1_1.AbstractFactory;
+using Lab1_1.Iterator;
 using Lab1_1.Proxy;
 
 namespace Lab1_1
@@ -147,6 +148,11 @@ namespace Lab1_1
                     Grid[y][x] = unitList[y * GetXSize() + x];
                 }
             }
+        }
+
+        public MapIterator CreateIterator(Map map)
+        {
+            return new MapIterator(this);
         }
 
         public int GetYSize()

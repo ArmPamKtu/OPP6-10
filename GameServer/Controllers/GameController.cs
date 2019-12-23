@@ -7,6 +7,7 @@ using Lab1_1.Observer;
 using Lab1_1.AbstractFactory;
 using GameServer.Models;
 using Lab1_1;
+using Lab1_1.Iterator;
 using Newtonsoft.Json;
 
 namespace GameServer.Controllers
@@ -33,6 +34,17 @@ namespace GameServer.Controllers
             {
                 Map.GetInstance.GenerateGrid(Constants.mapLenghtX, Constants.mapLenghtY);
                 _context.State.Add(new State { StateGame = "Updating" });
+
+                //--------ITERATOR Realizacija-----------------
+                MapIterator mapIterator = Map.GetInstance.CreateIterator(Map.GetInstance);
+                for (mapIterator.First(); !mapIterator.IsDone(); mapIterator.Next())
+                {
+                    Unit u = mapIterator.CurrentItem() as Unit;
+                    _context.Map.Add(JsonConvert.DeserializeObject<MapUnit>(JsonConvert.SerializeObject(u)));
+                }
+
+                /*
+                //--------FOR LOOP Realizacija-----------------
                 for (int y = 0; y < Map.GetInstance.GetYSize(); y++)
                 {
                     for (int x = 0; x < Map.GetInstance.GetXSize(); x++)
@@ -41,6 +53,8 @@ namespace GameServer.Controllers
                         _context.Map.Add(JsonConvert.DeserializeObject<MapUnit>(JsonConvert.SerializeObject(u)));
                     }
                 }
+                //---------------------------------------------
+                */
             }
             _context.SaveChanges();
         }
