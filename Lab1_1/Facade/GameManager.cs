@@ -184,24 +184,24 @@ namespace Lab1_1.Facade
 
                 //Console.WriteLine(JsonConvert.SerializeObject(player, Formatting.Indented));
 
+                Handler tree = new TreeHandler();
+                Handler stone = new StoneHandler();
+                Handler actionTower = new ActionTowerHandler();
+                Handler goldMine = new GoldMineHandler();
+                Handler wonder = new WonderHandler();
+
+                tree.SetSuccessor(stone);
+                stone.SetSuccessor(actionTower);
+                actionTower.SetSuccessor(goldMine);
+                goldMine.SetSuccessor(wonder);
+
+                foreach (Unit request in serverMap)
+                {
+                    tree.ProcessRequest(request);
+                }
+
                 turnLimit--;
             }
-            Handler tree = new TreeHandler();
-            Handler stone = new StoneHandler();
-            Handler actionTower = new ActionTowerHandler();
-            Handler goldMine = new GoldMineHandler();
-            Handler wonder = new WonderHandler();
-
-            tree.SetSuccessor(stone);
-            stone.SetSuccessor(actionTower);
-            actionTower.SetSuccessor(goldMine);
-            goldMine.SetSuccessor(wonder);
-
-            foreach (Unit request in serverMap)
-            {
-                tree.ProcessRequest(request);
-            }
-
         }
         public async Task<GameState> UpdateMap(long id, List<Unit> map)
         {
